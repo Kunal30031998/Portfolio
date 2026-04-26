@@ -209,7 +209,8 @@ export default function Portfolio() {
   const canvasRef = useRef(null);
   const threeRef = useRef({}); // holds scene/camera/renderer/etc
   const [progress, setProgress] = useState(0);
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(false);       // CDN scripts loaded
+  const [sceneReady, setSceneReady] = useState(false); // GPU shaders compiled
   const [cursorMode, setCursorMode] = useState('default');
   const [cursorColor, setCursorColor] = useState(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -245,6 +246,7 @@ export default function Portfolio() {
   const warpCanvasRef = useRef(null);
   const pausedRef = useRef(false);        // E13 pause mirror for RAF loop
   const autoScrollRef = useRef(true);     // auto-scroll mirror for RAF loop
+  const mouseLastMoveRef = useRef(null);   // performance.now() of last pointer activity, null = never moved
   const lenisStoppedRef = useRef(false);  // true when lenis.stop() called (detail open)
   const sectionsWrapRef = useRef(null);   // E10 CSS 3D perspective wrapper
   const wormholeTooltipRef = useRef(null); // E1 removed — kept to avoid undefined ref errors
@@ -257,7 +259,23 @@ export default function Portfolio() {
   const [soundOn, setSoundOn] = useState(true);
   const audioRef = useRef(null);
 
-  /* ---- Load CDN scripts sequentially ---- */
+  // Dedicated idle-detection effect — runs immediately on mount, not gated by ready.
+  // Uses pointermove (covers mouse, trackpad, stylus, touch) + wheel + touch.
+  useEffect(() => {
+    const _stamp = () => { mouseLastMoveRef.current = performance.now(); };
+    window.addEventListener('pointermove', _stamp, { passive: true });
+    window.addEventListener('pointerdown', _stamp, { passive: true });
+    window.addEventListener('wheel',       _stamp, { passive: true });
+    window.addEventListener('touchstart',  _stamp, { passive: true });
+    window.addEventListener('touchmove',   _stamp, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', _stamp);
+      window.removeEventListener('pointerdown', _stamp);
+      window.removeEventListener('wheel',       _stamp);
+      window.removeEventListener('touchstart',  _stamp);
+      window.removeEventListener('touchmove',   _stamp);
+    };
+  }, []);
   useEffect(() => {
     // Prevent browser scroll restoration BEFORE any content renders
     if ('scrollRestoration' in window.history) {
@@ -481,7 +499,7 @@ export default function Portfolio() {
     // mouse NDC for parallax
     const mouseNDC = new THREE.Vector2(0, 0);
     let _prevMx = 0, _prevMy = 0, _prevMoveT = 0;
-    // Minimal mousemove — only update NDC coords for parallax; Rapier is disabled
+    // Minimal mousemove — update NDC for parallax only
     const onMouseNDC = (e) => {
       mouseNDC.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouseNDC.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -2597,8 +2615,12 @@ self.onmessage=function(e){
       // E13 — Pause gate
       if (pausedRef.current) { raf = requestAnimationFrame(tick); return; }
 
-      // Auto-scroll — accumulate sub-pixel offset, only call scrollBy when ≥1px
-      if (autoScrollRef.current && !lenisStoppedRef.current) {
+      // Auto-scroll — only runs when screen has been idle for 1.5 s.
+      // mouseLastMoveRef is null until first user interaction → treat as active (no scroll).
+      // After first interaction it holds the timestamp; auto-scroll starts once 1.5 s elapses.
+      const _lastMove = mouseLastMoveRef.current;
+      const _userActive = _lastMove === null || (performance.now() - _lastMove) < 1500;
+      if (autoScrollRef.current && !lenisStoppedRef.current && !_userActive) {
         if (!threeRef.current._autoScrollAcc) threeRef.current._autoScrollAcc = 0;
         threeRef.current._autoScrollAcc += 0.5;
         if (threeRef.current._autoScrollAcc >= 1) {
@@ -2741,6 +2763,30 @@ self.onmessage=function(e){
 
       raf = requestAnimationFrame(tick);
     };
+
+    // Pre-compile ALL shader programs + upload all geometry buffers to the GPU
+    // while the loading screen is still visible. This eliminates the
+    // per-shader / per-buffer stutter that would otherwise hit on the first
+    // scrolled-to frame where each new material or geometry is first used.
+    //
+    // renderer.compile() forces the WebGL driver to compile every ShaderMaterial
+    // in the scene graph right now (blocking). Then we do 3 warm render passes
+    // to flush all VBO / texture uploads. Total cost: ~100-300ms at load time,
+    // which is hidden behind the loading screen — zero cost during interaction.
+    try {
+      // Temporarily show all galaxies so their geometries get uploaded too
+      galaxyGroup.children.forEach(g => { g.visible = true; });
+      renderer.compile(scene, camera);
+      // Three warm renders: first flushes VBO uploads, subsequent ones amortise
+      // any deferred driver work (shader linking, texture mip-gen, etc.)
+      renderer.render(scene, camera);
+      renderer.render(scene, camera);
+      renderer.render(scene, camera);
+      galaxyGroup.children.forEach(g => { g.visible = false; });
+    } catch (_warmErr) { /* non-fatal */ }
+
+    // Scene is fully GPU-resident — dismiss loading screen and start the loop
+    setSceneReady(true);
     tick();
 
     const onResize = () => {
@@ -2758,6 +2804,7 @@ self.onmessage=function(e){
       window.removeEventListener('resize', onResize);
       window.removeEventListener('resize', updateDesiredFromScroll);
       window.removeEventListener('mousemove', onMouseNDC);
+      // wheel/touch/pointermove idle listeners are owned by the dedicated top-level useEffect
       // E5: terminate orbital worker
       if (threeRef.current.orbitalWorker) {
         threeRef.current.orbitalWorker.terminate();
@@ -3120,7 +3167,7 @@ self.onmessage=function(e){
   return (
     <>
       <GlobalStyle />
-      <LoadingScreen progress={progress} done={ready} />
+      <LoadingScreen progress={progress} done={sceneReady} />
       <CustomCursor mode={cursorMode} color={cursorColor} />
 
       {/* Fixed Three canvas */}
