@@ -1,12 +1,20 @@
-import React from 'react';
-import { Rocket } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Rocket, MapPin, Github, Linkedin, Download } from 'lucide-react';
 import { Magnetic } from '../components/Magnetic';
 import { useTypewriter } from '../hooks/useTypewriter';
+import { useInView } from '../hooks/useInView';
+import { CountUp } from '../components/CountUp';
+import { ParticleMorphText } from '../components/ParticleMorphText';
 import { config } from '../data/content';
 
 export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
   const word = useTypewriter(config.hero.typewriterWords);
-  const { firstName, lastName } = config.owner;
+  const { firstName, lastName, githubUrl, linkedinUrl, available, location } = config.owner;
+  const statsRef  = useRef(null);
+  const nameRef   = useRef(null);
+  const [nameVisible, setNameVisible] = useState(false);
+  const statsVisible = useInView(statsRef, { threshold: 0.1 });
+
   return (
     <section
       id="hero"
@@ -16,10 +24,11 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
-        padding: '0 6vw',
+        padding: '90px 6vw 0',
         overflow: 'hidden',
       }}
     >
+      {/* ── LEFT: Text content ─────────────────────────────────────── */}
       <div
         style={{
           display: 'flex',
@@ -31,24 +40,49 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
           zIndex: 2,
         }}
       >
-        <div
-          className="font-mono"
-          style={{
-            color: 'var(--accent)',
-            fontSize: 10.5,
-            letterSpacing: '0.48em',
-            marginBottom: '1.5rem',
-            textTransform: 'uppercase',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 10,
-          }}
-        >
-          <span className="skeuo-led warp pulse-dot" style={{ width: 7, height: 7, borderRadius: '50%' }} />
-          Portfolio · 2026 · Astral Travel
+        {/* Eyebrow + availability badge */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+          <div
+            className="font-mono"
+            style={{
+              color: 'var(--accent)',
+              fontSize: 10.5,
+              letterSpacing: '0.48em',
+              textTransform: 'uppercase',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 10,
+            }}
+          >
+            <span className="skeuo-led warp pulse-dot" style={{ width: 7, height: 7, borderRadius: '50%' }} />
+            Portfolio · 2026 · Astral Travel
+          </div>
+          {available && (
+            <div
+              className="font-mono"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '3px 10px',
+                borderRadius: 20,
+                border: '1px solid rgba(130,227,176,0.35)',
+                background: 'rgba(130,227,176,0.08)',
+                color: 'var(--green)',
+                fontSize: 9.5,
+                letterSpacing: '0.28em',
+                textTransform: 'uppercase',
+              }}
+            >
+              <span className="avail-dot" />
+              Available
+            </div>
+          )}
         </div>
 
+        {/* Name — hidden until particle morph completes, then fades in */}
         <h1
+          ref={nameRef}
           className="font-display grad-text"
           style={{
             fontSize: 'clamp(3.2rem, 9vw, 8rem)',
@@ -57,29 +91,53 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
             fontWeight: 700,
             lineHeight: 0.92,
             textAlign: 'left',
+            opacity: nameVisible ? 1 : 0,
+            transition: 'opacity 0.55s ease 0.1s',
           }}
         >
           {firstName}
           <br />
           <span
             className="font-display grad-text-warm"
-            style={{ fontWeight: 400, letterSpacing: '-0.022em', display: 'inline-block' }}>{lastName}</span>
+            style={{ fontWeight: 400, letterSpacing: '-0.022em', display: 'inline-block' }}
+          >{lastName}</span>
         </h1>
+        {/* Particle morph — assembles name from dust, then reveals h1 */}
+        <ParticleMorphText targetRef={nameRef} onDone={() => setNameVisible(true)} />
 
-        <div
-          className="font-mono"
-          style={{
-            marginTop: '1.5rem',
-            fontSize: 'clamp(0.95rem, 1.3vw, 1.1rem)',
-            letterSpacing: '0.04em',
-            color: 'var(--text-dim)',
-          }}
-        >
-          <span style={{ color: 'var(--accent)' }}>{'>'} </span>
-          <span>{word}</span>
-          <span className="blink" style={{ color: 'var(--accent)' }}>_</span>
+        {/* Typewriter + Location tag */}
+        <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
+          <div
+            className="font-mono"
+            style={{
+              fontSize: 'clamp(0.95rem, 1.3vw, 1.1rem)',
+              letterSpacing: '0.04em',
+              color: 'var(--text-dim)',
+            }}
+          >
+            <span style={{ color: 'var(--accent)' }}>{'>'} </span>
+            <span>{word}</span>
+            <span className="blink" style={{ color: 'var(--accent)' }}>_</span>
+          </div>
+          {location && (
+            <div
+              className="font-mono"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+                color: 'var(--text-faint)',
+                fontSize: 10,
+                letterSpacing: '0.18em',
+              }}
+            >
+              <MapPin size={11} strokeWidth={1.5} style={{ color: 'var(--accent-dim)', flexShrink: 0 }} />
+              {location}
+            </div>
+          )}
         </div>
 
+        {/* Bio */}
         <p
           className="fade-up in font-display"
           style={{
@@ -100,6 +158,27 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
           </span>
         </p>
 
+        {/* Stats row */}
+        <div
+          ref={statsRef}
+          style={{ marginTop: '2rem', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}
+        >
+          {config.about.stats.map((s) => (
+            <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <span
+                className="font-display grad-text-warm"
+                style={{ fontSize: 'clamp(1.4rem, 2.2vw, 2rem)', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}
+              >
+                <CountUp to={s.value} suffix={s.suffix} trigger={statsVisible} duration={1400} />
+              </span>
+              <span className="font-mono" style={{ fontSize: 9.5, letterSpacing: '0.28em', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
+                {s.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA buttons */}
         <div style={{ marginTop: '2.5rem', display: 'flex', gap: '0.9rem', flexWrap: 'wrap' }}>
           <Magnetic onHover={onHoverBtn} onLeave={onUnhover}>
             <button
@@ -136,9 +215,86 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
               Get In Touch
             </button>
           </Magnetic>
+          <Magnetic onHover={onHoverBtn} onLeave={onUnhover}>
+            <a
+              href="/Resume.pdf"
+              download
+              className="skeuo-btn font-mono"
+              style={{
+                padding: '15px 20px',
+                color: 'var(--warm)',
+                borderColor: 'rgba(234,191,138,0.35)',
+                borderRadius: 10,
+                fontSize: 11.5,
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                cursor: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 7,
+                textDecoration: 'none',
+              }}
+            >
+              <Download size={13} strokeWidth={2} />
+              Résumé
+            </a>
+          </Magnetic>
+        </div>
+
+        {/* Social links */}
+        <div style={{ marginTop: '1rem', display: 'flex', gap: '0.7rem' }}>
+          {githubUrl && (
+            <a href={githubUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+              <Magnetic onHover={onHoverBtn} onLeave={onUnhover}>
+                <button
+                  className="skeuo-btn font-mono"
+                  style={{
+                    padding: '10px 14px',
+                    color: 'var(--text-dim)',
+                    borderRadius: 10,
+                    fontSize: 11,
+                    letterSpacing: '0.16em',
+                    textTransform: 'uppercase',
+                    cursor: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 7,
+                  }}
+                >
+                  <Github size={14} strokeWidth={1.8} />
+                  GitHub
+                </button>
+              </Magnetic>
+            </a>
+          )}
+          {linkedinUrl && (
+            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+              <Magnetic onHover={onHoverBtn} onLeave={onUnhover}>
+                <button
+                  className="skeuo-btn font-mono"
+                  style={{
+                    padding: '10px 14px',
+                    color: 'var(--text-dim)',
+                    borderRadius: 10,
+                    fontSize: 11,
+                    letterSpacing: '0.16em',
+                    textTransform: 'uppercase',
+                    cursor: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 7,
+                  }}
+                >
+                  <Linkedin size={14} strokeWidth={1.8} />
+                  LinkedIn
+                </button>
+              </Magnetic>
+            </a>
+          )}
         </div>
       </div>
 
+      {/* ── Bottom rocket ───────────────────────────────────────────── */}
       <div
         style={{
           position: 'absolute',

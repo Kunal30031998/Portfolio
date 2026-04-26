@@ -1,7 +1,9 @@
 import React from 'react';
+import { config } from '../data/content';
 
-/* Full-screen KUNAL + progress bar shown while CDN scripts load + GPU compiles. */
+/* Full-screen name + progress bar shown while CDN scripts load + GPU compiles. */
 export function LoadingScreen({ progress, done }) {
+  const { firstName } = config.owner;
   // progress 0-100 = CDN scripts; once scripts are done we wait for sceneReady (done=true).
   // Show a "Compiling shaders" phase when scripts are at 100% but scene isn't ready yet.
   const compiling = progress >= 100 && !done;
@@ -17,7 +19,7 @@ export function LoadingScreen({ progress, done }) {
       transition: 'opacity .6s ease-in-out',
     }}>
       <div className="font-display" style={{fontSize:'clamp(2rem,5vw,3.5rem)',letterSpacing:'0.45em',color:'var(--text)',fontWeight:400}}>
-        KUNAL
+        {firstName.toUpperCase()}
       </div>
       <div style={{marginTop:'2rem',width:'min(320px,60vw)',height:1,background:'rgba(255,255,255,0.08)',overflow:'hidden'}}>
         <div style={{width:`${barWidth}%`,height:'100%',background:'var(--accent)',transition:'width .4s ease-out'}}/>

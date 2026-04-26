@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 /* Top center nav pill — cinematic, astral. Left monogram + orbital
    indicator, center section links, right side scroll-progress rail
    under the pill that fills as the user travels through the journey. */
-export function NavPill({ onHoverBtn, onUnhover, scrollTo, activeId, hide }) {
+export function NavPill({ onHoverBtn, onUnhover, scrollTo, activeId, hide, detailOpen }) {
   const ref = useRef(null);
   const [hidden, setHidden] = useState(false);
   const [hoverIdx, setHoverIdx] = useState(null);
@@ -48,13 +48,15 @@ export function NavPill({ onHoverBtn, onUnhover, scrollTo, activeId, hide }) {
       style={{
         position: 'fixed',
         top: 18,
-        left: '50%',
-        transform: `translateX(-50%) translateY(${hide ? -24 : 0}px)`,
+        left: detailOpen ? '50%' : '50%',
+        right: detailOpen ? 0 : 'auto',
+        transform: detailOpen ? 'translateY(' + (hide ? -24 : 0) + 'px)' : `translateX(-50%) translateY(${hide ? -24 : 0}px)`,
         zIndex: 50,
         opacity: hide ? 0 : (hidden ? 0 : 1),
         pointerEvents: (hide || hidden) ? 'none' : 'auto',
-        transition: 'opacity 300ms ease, transform 300ms ease',
-        maxWidth: 'min(1080px, calc(100vw - 20px))',
+        transition: 'opacity 300ms ease, transform 300ms ease, left 300ms ease, right 300ms ease',
+        maxWidth: detailOpen ? 'calc(50% - 20px)' : 'min(1080px, calc(100vw - 20px))',
+        marginRight: detailOpen ? 18 : 'auto',
       }}
     >
       <div

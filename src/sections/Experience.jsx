@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { useInView } from '../hooks/useInView';
-import { EXPERIENCE } from '../data/content';
+import { EXPERIENCE, config } from '../data/content';
 
 function ExperienceCard({ n, i, inView, onOpenExperience, onHoverBtn, onUnhover }) {
   const cardRef = useRef(null);
@@ -11,6 +11,10 @@ function ExperienceCard({ n, i, inView, onOpenExperience, onHoverBtn, onUnhover 
     const x = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
     const y = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
     el.style.transform = `translateX(0) perspective(1100px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg)`;
+    // Holographic shimmer
+    const angle = Math.atan2(y, x) * (180 / Math.PI);
+    el.style.setProperty('--holo-angle', `${angle + 90}deg`);
+    el.style.setProperty('--holo-hue', `${185 + x * 75}`);
   };
   const leave = () => {
     if (cardRef.current) cardRef.current.style.transform = 'translateX(0) perspective(1100px) rotateY(0) rotateX(0)';
@@ -27,7 +31,7 @@ function ExperienceCard({ n, i, inView, onOpenExperience, onHoverBtn, onUnhover 
       role="button"
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onOpenExperience?.(n); }}
-      className="card-tilt glass-card"
+      className="card-tilt holo-card glass-card"
       style={{
         position: 'relative',
         marginBottom: '1rem',
@@ -85,14 +89,15 @@ function ExperienceCard({ n, i, inView, onOpenExperience, onHoverBtn, onUnhover 
 export function Experience({ onOpenExperience, onHoverBtn, onUnhover }) {
   const ref = useRef(null);
   const inView = useInView(ref, { threshold: 0.1 });
+  const { eyebrow, title, kicker } = config.sections.experience;
   return (
     <section id="experience" className="fade-during-dive section-scrim section-shell">
       <div className="section-inner" style={{ justifyContent: 'flex-start' }}>
         <div className="reading-rail">
-          <div className="section-eyebrow">04 — Journey</div>
-          <h2 className="section-title">Signal log.</h2>
+          <div className="section-eyebrow">{eyebrow}</div>
+          <h2 className="section-title">{title}</h2>
           <p className="section-kicker" style={{ marginBottom: '2rem' }}>
-            Six years. Three companies. Each node opens a warp log with the scope, the wins, and the stack.
+            {kicker}
           </p>
 
           <div ref={ref} style={{ position: 'relative', paddingLeft: 34 }}>

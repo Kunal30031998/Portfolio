@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { TERMINAL_SCRIPT } from '../data/content';
+import { TERMINAL_SCRIPT, config } from '../data/content';
 import { useInView } from '../hooks/useInView';
 
 // E8: format relative time
@@ -45,8 +45,10 @@ export function Terminal({ onViewSource }) {
   const endRef = useRef(null);
 
   useEffect(() => {
-    fetchCurrentActivity('kugautam').then(setActivity);
-    const poll = setInterval(() => fetchCurrentActivity('kugautam').then(setActivity), 5 * 60 * 1000);
+    const { githubUrl } = config.owner;
+    const username = githubUrl.split('/').pop();
+    fetchCurrentActivity(username).then(setActivity);
+    const poll = setInterval(() => fetchCurrentActivity(username).then(setActivity), 5 * 60 * 1000);
     return () => clearInterval(poll);
   }, []);
 
@@ -78,10 +80,11 @@ export function Terminal({ onViewSource }) {
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [lines, userLine]);
 
   const handleKey = (e) => {
+    const { email } = config.owner;
     if (e.key === 'Enter') {
       const cmd = userLine.trim().toLowerCase();
       let out = '> command not found. but I appreciate the curiosity.';
-      if (cmd === 'sudo hire kunal') out = '> access granted. reach me at kunal.gautam.570@gmail.com.';
+      if (cmd === 'sudo hire kunal') out = `> access granted. reach me at ${email}.`;
       else if (cmd === 'ls projects') out = '> admin-dashboard  ui-component-library  cloud-microservices  ci-cd  real-time-learning  canvas-ui';
       else if (cmd === 'help') out = '> try: sudo hire kunal · ls projects · whoami · clear · view source · cd wormhole';
       else if (cmd === 'whoami') out = '> you — and you have good taste in portfolios.';
@@ -104,8 +107,8 @@ export function Terminal({ onViewSource }) {
       <div className="section-inner">
         <div className="reading-rail wide">
           <div style={{padding:0}}>
-            <div className="section-eyebrow">05 — Deep Field</div>
-            <h2 className="section-title">Access the terminal.</h2>
+            <div className="section-eyebrow">{config.sections.terminal.eyebrow}</div>
+            <h2 className="section-title">{config.sections.terminal.title}</h2>
             <p className="section-kicker" style={{marginBottom:'1.5rem'}}>
               Try <span style={{color:'var(--accent)'}}>help</span>, <span style={{color:'var(--accent)'}}>ls projects</span>, or the hidden hire command.
             </p>

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { SKILL_GROUPS } from '../data/content';
+import { SKILL_GROUPS, config } from '../data/content';
 import { useInView } from '../hooks/useInView';
 
 function SkillGroup({ group, baseDelay, index }) {
@@ -43,14 +43,15 @@ function SkillGroup({ group, baseDelay, index }) {
 }
 
 export function Skills() {
+  const { eyebrow, title, kicker } = config.sections.skills;
   return (
     <section id="skills" className="section-scrim section-shell">
       <div className="section-inner">
         <div className="reading-rail wide">
-          <div className="section-eyebrow">03 — Arsenal</div>
-          <h2 className="section-title">What I reach for.</h2>
+          <div className="section-eyebrow">{eyebrow}</div>
+          <h2 className="section-title">{title}</h2>
           <p className="section-kicker" style={{ marginBottom: '2rem' }}>
-            The instruments I trust — from the metal to the glass.
+            {kicker}
           </p>
           <div style={{
             display: 'grid',

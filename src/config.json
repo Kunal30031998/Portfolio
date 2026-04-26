@@ -47,6 +47,14 @@
     "subheading": "Let's write the next chapter."
   },
 
+  "sections": {
+    "projects":   { "eyebrow": "02 — Missions",   "title": "Things I've shipped.", "kicker": "Real products. Real constraints. Real impact." },
+    "skills":     { "eyebrow": "03 — Arsenal",    "title": "What I reach for.",    "kicker": "The instruments I trust — from the metal to the glass." },
+    "experience": { "eyebrow": "04 — Stations",   "title": "Where I've been.",     "kicker": "Every role added a layer." },
+    "terminal":   { "eyebrow": "05 — Terminal",   "title": "Run a command." },
+    "footer":     { "credit": "built by {owner.firstName} {owner.lastName} · {year} · react + three.js + gsap" }
+  },
+
   "projects": [
     {
       "id": "admin-dashboard",
@@ -259,6 +267,8 @@
   ],
 
   "terminal": {
+    "eyebrow": "05 — Deep Field",
+    "title": "Access the terminal.",
     "script": [
       { "cmd": "$ whoami",          "out": "> kunal gautam — full stack software engineer · 6+ years" },
       { "cmd": "$ kunal --role",    "out": "> software developer ii @ hashedin by deloitte (gurugram)" },

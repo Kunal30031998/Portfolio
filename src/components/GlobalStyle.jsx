@@ -174,7 +174,27 @@ export const GlobalStyle = () => (
 
     .card-tilt{transition:transform .4s ease, border-color .3s ease, background .3s ease}
     .card-tilt:hover{border-color:rgba(167,231,243,0.5) !important}
-    .card-inner-glow{display:none}
+
+    /* Holographic iridescent shimmer — tracks mouse angle via --holo-angle and --holo-hue */
+    .holo-card{position:relative; overflow:hidden;}
+    .holo-card::after{
+      content:'';
+      position:absolute; inset:0;
+      border-radius:inherit;
+      background:linear-gradient(
+        calc(var(--holo-angle,120deg)),
+        transparent 20%,
+        hsla(var(--holo-hue,185),100%,72%,0.22) 45%,
+        hsla(calc(var(--holo-hue,185) + 40),100%,68%,0.18) 55%,
+        transparent 80%
+      );
+      mix-blend-mode:screen;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 0.35s ease;
+      z-index:1;
+    }
+    .holo-card:hover::after{opacity:1;}
 
     .magnetic{transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
     .reveal-line{display:block;overflow:hidden}
@@ -183,6 +203,16 @@ export const GlobalStyle = () => (
     @keyframes fadeInUp {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     .fade-up{opacity:0}
     .fade-up.in{animation:fadeInUp .8s ease-out forwards}
+
+    @keyframes availPulse {0%,100%{box-shadow:0 0 0 0 rgba(130,227,176,0.55)}50%{box-shadow:0 0 0 5px transparent}}
+    @keyframes hudBar0 {from{opacity:0.4}to{opacity:1}}
+    @keyframes hudBar1 {from{opacity:0.55}to{opacity:0.85}}
+    @keyframes hudBar2 {from{opacity:0.3}to{opacity:0.9}}
+
+    .avail-dot{
+      width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;
+      animation:availPulse 1.6s ease-out infinite;display:inline-block;
+    }
 
     .nav-pill{transition:transform .5s cubic-bezier(.22,1,.36,1), filter .35s, opacity .45s}
     /* Top-edge scrim: masks content scrolling under the fixed nav */

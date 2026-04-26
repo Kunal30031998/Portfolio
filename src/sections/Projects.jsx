@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import { PROJECTS } from '../data/content';
+import { PROJECTS, config } from '../data/content';
 import { useInView } from '../hooks/useInView';
 
 function ProjectCard({ p, index, onHoverCard, onUnhover, onHoverBtn, onOpen }) {
@@ -12,6 +12,10 @@ function ProjectCard({ p, index, onHoverCard, onUnhover, onHoverBtn, onOpen }) {
     const x = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
     const y = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
     el.style.transform = `perspective(1100px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) translateZ(0)`;
+    // Holographic shimmer: angle tracks mouse direction, hue shifts left→right
+    const angle = Math.atan2(y, x) * (180 / Math.PI);
+    el.style.setProperty('--holo-angle', `${angle + 90}deg`);
+    el.style.setProperty('--holo-hue', `${185 + x * 75}`);
   };
   const leave = () => {
     if (ref.current) ref.current.style.transform = 'perspective(1100px) rotateY(0) rotateX(0)';
@@ -30,7 +34,7 @@ function ProjectCard({ p, index, onHoverCard, onUnhover, onHoverBtn, onOpen }) {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onOpen?.(p); }}
-      className="card-tilt glass-card railed"
+      className="card-tilt holo-card glass-card railed"
       style={{
         padding: '1.5rem 1.5rem 1.5rem 1.75rem',
         opacity: inView ? 1 : 0,
@@ -92,14 +96,15 @@ function ProjectCard({ p, index, onHoverCard, onUnhover, onHoverBtn, onOpen }) {
 }
 
 export function Projects({ onHoverCard, onUnhover, onHoverBtn, onOpenProject }) {
+  const { eyebrow, title, kicker } = config.sections.projects;
   return (
     <section id="projects" className="section-scrim section-shell">
       <div className="section-inner" style={{ justifyContent: 'flex-start' }}>
         <div className="reading-rail">
-          <div className="section-eyebrow">02 — Case Files</div>
-          <h2 className="section-title">Problems I solved.</h2>
+          <div className="section-eyebrow">{eyebrow}</div>
+          <h2 className="section-title">{title}</h2>
           <p className="section-kicker" style={{ marginBottom: '2rem' }}>
-            Tap a case file to warp into a full dossier — the brief, how it was built, what I personally owned.
+            {kicker}
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>

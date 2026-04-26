@@ -22,12 +22,14 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  // Only handle http/https — chrome-extension:// and other schemes are unsupported by Cache API
+  if (!e.request.url.startsWith('http')) return;
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
       return fetch(e.request).then(r => {
-        if (!r || r.status !== 200) return r;
-        const rClone = r.clone(); // clone synchronously before body is consumed
+        if (!r || r.status !== 200 || r.type === 'opaque') return r;
+        const rClone = r.clone();
         caches.open(CACHE).then(c => c.put(e.request, rClone));
         return r;
       }).catch(() => cached);
