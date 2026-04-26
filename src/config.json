@@ -1,0 +1,330 @@
+{
+  "_comment": "Edit this file to personalise the portfolio. No code changes needed.",
+
+  "owner": {
+    "firstName": "Kunal",
+    "lastName": "Gautam",
+    "fullName": "Kunal Gautam",
+    "title": "Full Stack Software Engineer",
+    "email": "kunal.gautam.570@gmail.com",
+    "phone": "+91-9205659139",
+    "githubUrl": "https://github.com/kugautam",
+    "linkedinUrl": "https://linkedin.com/in/kunal-gautam",
+    "location": "Gurugram, India",
+    "available": true
+  },
+
+  "hero": {
+    "eyebrow": "Portfolio · 2026 · Astral Travel",
+    "typewriterWords": [
+      "Full Stack Engineer",
+      "React + Node",
+      "Cloud-Native",
+      "Performance-Obsessed"
+    ]
+  },
+
+  "about": {
+    "eyebrow": "01 — Signal",
+    "bioLines": [
+      "Full stack software engineer with 6+ years shipping cloud-native, high-traffic web apps.",
+      "React and TypeScript on the surface. Node.js and Java underneath. AWS and GCP in the bones.",
+      "Specialized in microservices, frontend performance, and end-to-end product ownership.",
+      "Currently shipping features for 50,000+ concurrent users as a Software Developer II at Hashedin by Deloitte."
+    ],
+    "availabilityText": "Live — Open to opportunities",
+    "stats": [
+      { "value": 6,  "suffix": "+",  "label": "Years Experience" },
+      { "value": 50, "suffix": "K+", "label": "Concurrent Users" },
+      { "value": 3,  "suffix": "",   "label": "Companies Shipped" },
+      { "value": 4,  "suffix": "",   "label": "Engineers Mentored" }
+    ]
+  },
+
+  "contact": {
+    "eyebrow": "End Transmission",
+    "heading": "That's the story so far.",
+    "subheading": "Let's write the next chapter."
+  },
+
+  "projects": [
+    {
+      "id": "admin-dashboard",
+      "problem": "// problem: internal tools kept getting rebuilt from scratch",
+      "title": "Enterprise Admin Dashboard",
+      "body": "Built a modular, responsive admin panel with 25+ reusable UI components, role-based routing, and dynamic form rendering. Virtualized tables, lazy loading, and memoization delivered 30% faster UI render performance.",
+      "tags": ["React", "TypeScript", "Redux", "Tailwind"],
+      "detail": {
+        "headline": "A scalable admin platform that stops teams from reinventing UI.",
+        "role": ["Frontend lead", "Architecture + performance"],
+        "highlights": [
+          "Designed a reusable component + page framework (tables, filters, forms, modals, toasts).",
+          "Implemented role-based routing and permissions-aware UI states.",
+          "Optimized large datasets via virtualization + memoization (measurable render-time improvements)."
+        ],
+        "whatIPersonalOwned": [
+          "Component API design + adoption guidelines.",
+          "Performance profiling and fixes (render loops, expensive selectors, list rendering).",
+          "Release readiness (CI hooks, QA support, production hardening)."
+        ]
+      }
+    },
+    {
+      "id": "ui-library",
+      "problem": "// problem: every team shipped its own buttons",
+      "title": "UI Component Library",
+      "body": "Designed a themeable, accessible internal component library (buttons, modals, forms, toasts) adopted across multiple teams. Storybook-driven docs cut onboarding time and standardized UI across products.",
+      "tags": ["React", "TypeScript", "Storybook", "SCSS"],
+      "detail": {
+        "headline": "One design system, many products — consistent UX at speed.",
+        "role": ["Design system engineer", "DX focus"],
+        "highlights": [
+          "Built accessible primitives (focus states, keyboard nav, ARIA patterns).",
+          "Themeable tokens + variants for product teams (light/dark-ready foundations).",
+          "Storybook docs and usage patterns to accelerate adoption."
+        ],
+        "whatIPersonalOwned": [
+          "Component architecture (composition patterns, controlled/uncontrolled).",
+          "Migration playbook for teams consuming the library.",
+          "Quality gates (visual review, lint rules, test strategy)."
+        ]
+      }
+    },
+    {
+      "id": "microservices",
+      "problem": "// problem: 50k concurrent users hit a monolith",
+      "title": "Cloud-Native Microservices",
+      "body": "Architected REST + GraphQL services on Node.js/Express with JWT/OAuth auth, deployed to AWS (Lambda, EC2, API Gateway) and GCP (Cloud Run, Firebase). Horizontally scaled to support 50,000+ concurrent users.",
+      "tags": ["Node.js", "GraphQL", "AWS", "GCP"],
+      "detail": {
+        "headline": "Services that scale horizontally under real traffic.",
+        "role": ["Full stack", "Backend + cloud"],
+        "highlights": [
+          "Built REST/GraphQL services with auth (JWT/OAuth) and safe rate limiting patterns.",
+          "Deployed on AWS/GCP with pragmatic infra choices (cost + latency).",
+          "Improved reliability with monitoring + structured logging."
+        ],
+        "whatIPersonalOwned": [
+          "API design + contract stability across teams.",
+          "Deployment pipelines and environment configs.",
+          "Production debugging and performance tuning."
+        ]
+      }
+    },
+    {
+      "id": "cicd",
+      "problem": "// problem: releases were manual and risky",
+      "title": "CI/CD Pipelines",
+      "body": "Designed and implemented CI/CD with GitHub Actions, Jenkins, and Terraform. Owned end-to-end release management with production monitoring via CloudWatch, New Relic, and the ELK stack.",
+      "tags": ["GitHub Actions", "Jenkins", "Terraform", "Docker"],
+      "detail": {
+        "headline": "Faster shipping with fewer production surprises.",
+        "role": ["DevEx + release owner"],
+        "highlights": [
+          "Automated build/test/release pipelines with repeatable environments.",
+          "Infra as code with Terraform to reduce drift.",
+          "Observability baseline (logs/metrics/alerts) to shorten incident loops."
+        ],
+        "whatIPersonalOwned": [
+          "Pipeline design + failure triage.",
+          "Release runbooks and rollback safety.",
+          "Ownership of 'broken build' culture and fixes."
+        ]
+      }
+    },
+    {
+      "id": "realtime-elearning",
+      "problem": "// problem: a live classroom needed to feel live",
+      "title": "Real-Time E-Learning",
+      "body": "Integrated WebSocket-driven classroom features — teacher-student interaction, polling, Q&A — into an e-learning platform serving thousands of concurrent students. Refactored legacy React to Hooks + Context.",
+      "tags": ["React", "WebSockets", "Redux", "Firebase"],
+      "detail": {
+        "headline": "Latency-sensitive UI patterns for truly live sessions.",
+        "role": ["Frontend engineer"],
+        "highlights": [
+          "Real-time features with predictable state updates and resiliency to reconnects.",
+          "Refactor plan: legacy code → hooks + composable state containers.",
+          "UX polish for 'it feels live': optimistic updates and fast feedback loops."
+        ],
+        "whatIPersonalOwned": [
+          "WebSocket event design on the client.",
+          "State refactors and performance fixes.",
+          "Feature delivery in tight timelines."
+        ]
+      }
+    },
+    {
+      "id": "high-fps-ui",
+      "problem": "// problem: canvas apps choked under load",
+      "title": "High-FPS Interactive UI",
+      "body": "Engineered Canvas/WebGL-backed interactive apps with efficient DOM updates, asset optimization, and memory management. Shipped transactional flows (in-app purchases, points, dynamic content) on top.",
+      "tags": ["JavaScript", "Canvas", "WebGL", "React"],
+      "detail": {
+        "headline": "Interactive experiences that stay smooth under load.",
+        "role": ["Frontend + rendering"],
+        "highlights": [
+          "Optimized render loops and reduced main-thread churn (GC + layout).",
+          "Asset strategy (compression, lazy decode) to keep TTI fast.",
+          "Built product flows on top of high-FPS canvases without jank."
+        ],
+        "whatIPersonalOwned": [
+          "Performance profiling and optimization.",
+          "Rendering architecture choices and guardrails.",
+          "Integration with APIs and transactional flows."
+        ]
+      }
+    }
+  ],
+
+  "experience": [
+    {
+      "id": "hashedin-deloitte",
+      "when": "May 2022 — now",
+      "title": "Software Developer II · Hashedin By Deloitte",
+      "body": "Full-stack features with React, TypeScript, Node.js, and GraphQL for 50,000+ concurrent users. Led frontend architecture, CI/CD with GitHub Actions + Jenkins + Terraform, and mentored 3–4 junior developers.",
+      "detail": {
+        "headline": "Owning features end-to-end for high-concurrency products.",
+        "scope": [
+          "Frontend architecture decisions (performance, DX, design patterns).",
+          "Delivery ownership across teams (requirements → release → monitoring).",
+          "Mentorship and raising the baseline through reviews and playbooks."
+        ],
+        "wins": [
+          "Shipped business-critical workflows for 50,000+ concurrent users.",
+          "Improved release safety by tightening CI/CD and operational readiness.",
+          "Reduced UI regressions through component patterns and testing discipline."
+        ],
+        "stack": ["React", "TypeScript", "Node.js", "GraphQL", "AWS/GCP", "Terraform", "GitHub Actions/Jenkins"]
+      }
+    },
+    {
+      "id": "extramarks",
+      "when": "Nov 2021 — May 2022",
+      "title": "Frontend Engineer · Extramarks",
+      "body": "Built live e-learning modules in React + Redux serving thousands of concurrent students. Integrated WebSocket classroom features and refactored legacy code to modern Hooks + Context.",
+      "detail": {
+        "headline": "Real-time classrooms where 'live' is a product feature.",
+        "scope": [
+          "WebSocket-driven interactions (polls, Q&A, teacher actions).",
+          "Refactoring legacy modules to modern React patterns.",
+          "Performance fixes for long-running sessions."
+        ],
+        "wins": [
+          "Improved perceived responsiveness with optimistic UI patterns.",
+          "Stabilized state management and reduced regressions after refactors."
+        ],
+        "stack": ["React", "Redux", "WebSockets", "Firebase"]
+      }
+    },
+    {
+      "id": "ingenuity-gaming",
+      "when": "Feb 2020 — Nov 2021",
+      "title": "Associate Frontend Developer · Ingenuity Gaming",
+      "body": "Shipped Canvas/WebGL-backed interactive apps with high-FPS rendering, integrated REST APIs for transactional flows, and tuned performance across the stack.",
+      "detail": {
+        "headline": "High-FPS interactive UI with real product flows.",
+        "scope": [
+          "Rendering/perf work (main thread budget, memory, asset pipelines).",
+          "API integrations and transactional UX patterns.",
+          "Shipping interactive experiences under strict performance constraints."
+        ],
+        "wins": [
+          "Maintained smooth frame rates under load through profiling and tuning.",
+          "Delivered production features without sacrificing interactivity."
+        ],
+        "stack": ["JavaScript", "Canvas/WebGL", "React", "REST APIs"]
+      }
+    },
+    {
+      "id": "education",
+      "when": "2020",
+      "title": "B.Tech, IT · Galgotias College of Engineering & Technology",
+      "body": "Graduated with a B.Tech in Information Technology.",
+      "detail": {
+        "headline": "Foundation years.",
+        "scope": ["Computer science fundamentals + hands-on projects."],
+        "wins": ["Built the base that later became production discipline."],
+        "stack": []
+      }
+    }
+  ],
+
+  "skills": [
+    { "title": "// languages",    "items": ["JavaScript (ES6+)", "TypeScript", "Java", "Python", "C++", "SQL"] },
+    { "title": "// frontend",     "items": ["React.js", "Next.js", "Redux", "Context API", "Tailwind CSS", "HTML5 / CSS3", "Performance Optimization"] },
+    { "title": "// backend",      "items": ["Node.js", "Express.js", "GraphQL", "REST APIs", "WebSockets", "JWT / OAuth", "Firebase Auth"] },
+    { "title": "// cloud_devops", "items": ["AWS (EC2, S3, Lambda, API Gateway)", "GCP (Cloud Run, Firebase)", "Azure", "Docker", "Terraform", "GitHub Actions", "Jenkins"] },
+    { "title": "// data",         "items": ["PostgreSQL", "MongoDB", "Redis"] },
+    { "title": "// testing_tools","items": ["Jest", "React Testing Library", "Chrome DevTools", "Postman", "Webpack", "Babel", "Git / GitHub", "Jira", "Agile / Scrum"] }
+  ],
+
+  "terminal": {
+    "script": [
+      { "cmd": "$ whoami",          "out": "> kunal gautam — full stack software engineer · 6+ years" },
+      { "cmd": "$ kunal --role",    "out": "> software developer ii @ hashedin by deloitte (gurugram)" },
+      { "cmd": "$ kunal --stack",   "out": "> react · typescript · node · graphql · aws · gcp · docker · terraform" },
+      { "cmd": "$ kunal --scale",   "out": "> shipping for 50,000+ concurrent users across business-critical workflows" },
+      { "cmd": "$ kunal --status",  "out": "> currently: shipping. always: optimizing. never: settling." },
+      { "cmd": "$ kunal --contact", "out": "> kunal.gautam.570@gmail.com · +91-9205659139" },
+      { "cmd": "$ kunal --secret",  "out": "> you found the terminal. you're exactly the kind of person I want to work with." }
+    ]
+  },
+
+  "chat": {
+    "suggestions": [
+      "What has Kunal built?",
+      "Show me his stack",
+      "Is Kunal a good hire?",
+      "How do I get in touch?"
+    ],
+    "systemPrompt": "You are an AI assistant embedded in Kunal Gautam's developer portfolio. You speak in first person as if you ARE Kunal — confident, witty, technically sharp. You know everything about Kunal:\n\n- Name: Kunal Gautam. Full Stack Software Engineer with 6+ years of experience.\n- Current role: Software Developer II at Hashedin By Deloitte (Gurugram), since May 2022. Ship full-stack features with React, TypeScript, Node.js, and GraphQL serving 50,000+ concurrent users. Lead frontend architecture decisions, CI/CD with GitHub Actions + Jenkins + Terraform, and mentor 3–4 junior developers.\n- Previous: Frontend Engineer at Extramarks (Nov 2021 — May 2022) building live e-learning with WebSocket classroom features. Associate Frontend Developer at Ingenuity Gaming (Feb 2020 — Nov 2021) shipping high-FPS Canvas/WebGL apps.\n- Education: B.Tech in IT, Galgotias College of Engineering & Technology, 2020.\n- Contact: kunal.gautam.570@gmail.com · +91-9205659139.\n- Featured projects: Enterprise Admin Dashboard (25+ reusable components, 30% faster renders), UI Component Library (Storybook-driven design system), cloud-native microservices on AWS + GCP, CI/CD pipelines, real-time e-learning with WebSockets, and Canvas/WebGL interactive UIs.\n- Stack: JavaScript, TypeScript, Java, Python, C++, SQL; React, Next.js, Redux, Tailwind; Node.js, Express, GraphQL, REST, WebSockets, JWT/OAuth; AWS (EC2, S3, Lambda, API Gateway), GCP (Cloud Run, Firebase), Azure, Docker, Terraform; PostgreSQL, MongoDB, Redis; Jest, RTL.\n- Personality: problem-solver first, loves building things that scale, obsessed with performance and clean architecture.\n- This portfolio itself is a flex — built with Three.js, WebGL, Claude API, GSAP, Lenis.\n\nWhen asked about projects, describe them as problems Kunal solved, not things he built. Be concise (2-4 sentences max per response). If asked \"is Kunal a good hire\" — answer with confident wit. If asked to \"show\" something, respond with: \"Scroll to [section name] ↓\" and include a data-action attribute in your response JSON.\n\nRespond ONLY in this JSON format:\n{\"message\": \"your response here\", \"scrollTo\": \"hero|about|projects|skills|contact|null\"}",
+    "localBrainResponses": [
+      {
+        "keywords": ["hire"],
+        "message": "Short answer: yes. Long answer: 6+ years, full stack, shipped for 50k+ concurrent users, mentored juniors, owned releases end-to-end. Want the receipts? Scroll to projects ↓",
+        "scrollTo": "projects"
+      },
+      {
+        "keywords": ["experience", "years", "journey"],
+        "message": "Six-plus years: Ingenuity Gaming → Extramarks → Hashedin By Deloitte. Frontend-heavy, full-stack ready. Scroll to journey ↓",
+        "scrollTo": "experience"
+      },
+      {
+        "keywords": ["build", "project"],
+        "message": "Admin dashboards, a full UI component library, cloud-native microservices, CI/CD pipelines, real-time e-learning, and Canvas/WebGL apps. Scroll to projects ↓",
+        "scrollTo": "projects"
+      },
+      {
+        "keywords": ["skill", "stack", "tech"],
+        "message": "React, TypeScript, Node.js, GraphQL on top; AWS, GCP, Docker, Terraform underneath. Postgres, Mongo, Redis for state. Scroll to skills ↓",
+        "scrollTo": "skills"
+      },
+      {
+        "keywords": ["cloud", "aws", "gcp", "devops"],
+        "message": "AWS (Lambda, EC2, S3, API Gateway) and GCP (Cloud Run, Firebase), wrapped in Docker + Terraform, delivered through GitHub Actions and Jenkins.",
+        "scrollTo": "skills"
+      },
+      {
+        "keywords": ["contact", "email", "reach"],
+        "message": "kunal.gautam.570@gmail.com · +91-9205659139. Scroll to contact ↓",
+        "scrollTo": "contact"
+      },
+      {
+        "keywords": ["about", "who"],
+        "message": "Full stack engineer at Hashedin By Deloitte, shipping for 50k+ concurrent users. Scroll to about ↓",
+        "scrollTo": "about"
+      },
+      {
+        "keywords": ["different", "special"],
+        "message": "I optimize for outcomes, not line counts. End-to-end ownership from architecture through production monitoring. This site itself is the flex.",
+        "scrollTo": null
+      },
+      {
+        "keywords": [],
+        "fallback": true,
+        "message": "Ask me about my stack, experience, projects, or how to get in touch.",
+        "scrollTo": null
+      }
+    ]
+  }
+}

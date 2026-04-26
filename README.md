@@ -1,4 +1,4 @@
-# activeTheoryPortfolio
+# Astral Portfolio
 
 Cinematic WebGL portfolio inspired by activetheory.net. Single-file React artifact in `src/Portfolio.jsx` that loads Three.js, GSAP, ScrollTrigger, and Lenis from CDNs at runtime.
 
@@ -9,15 +9,37 @@ npm install
 npm run dev
 ```
 
+## Customising the template
+
+All personal content lives in one file — **`src/config.json`**. No code changes needed.
+
+| Section | Keys to edit |
+|---------|-------------|
+| Your identity | `owner.firstName`, `owner.lastName`, `owner.email`, `owner.phone`, `owner.githubUrl`, `owner.linkedinUrl` |
+| Hero | `hero.eyebrow`, `hero.typewriterWords` |
+| About | `about.bioLines`, `about.stats`, `about.availabilityText` |
+| Contact | `contact.heading`, `contact.subheading` |
+| Projects | `projects[]` — each entry has `id`, `title`, `problem`, `body`, `tags`, `detail` |
+| Experience | `experience[]` — each entry has `id`, `when`, `title`, `body`, `detail` |
+| Skills | `skills[]` — each entry has `title` (group name) and `items` |
+| Terminal | `terminal.script[]` — `{cmd, out}` pairs for the auto-typing animation |
+| Clara AI | `chat.suggestions`, `chat.systemPrompt`, `chat.localBrainResponses` |
+
+### Minimal fork checklist
+1. Edit `src/config.json` with your details.
+2. Replace `/public/deepState.mp3` with your preferred ambient track (or remove the audio feature).
+3. Update `owner.githubUrl` and `owner.linkedinUrl` to your actual profile URLs.
+4. Update the `chat.systemPrompt` to describe you, not Kunal.
+
 ## Claude API (optional)
 
-The chat widget calls `https://api.anthropic.com/v1/messages` exactly as specified, but browsers require an API key + the dangerous-direct-browser-access header. For a live demo without a backend, drop a key at runtime:
+The chat widget calls `https://api.anthropic.com/v1/messages`. For a live demo without a backend:
 
 ```js
 localStorage.setItem('ANTHROPIC_API_KEY', 'sk-ant-...');
 ```
 
-Without a key, the widget falls back to a local "Kunal brain" that returns the same JSON shape (`{message, scrollTo}`) so every feature (including smooth scroll to sections) still works.
+Without a key, the widget falls back to `chat.localBrainResponses` in `config.json` — fully functional offline.
 
 **Production:** proxy the call through your own server — do not ship keys to the browser.
 
@@ -26,4 +48,8 @@ Without a key, the widget falls back to a local "Kunal brain" that returns the s
 - `sudo hire kunal`
 - `ls projects`
 - `help` · `clear` · `whoami`
-# Portfolio
+
+## License
+
+This project is released under a **Personal Use License** — free to fork for your own portfolio, not for resale or commercial use. See [LICENSE](LICENSE) for full terms.
+

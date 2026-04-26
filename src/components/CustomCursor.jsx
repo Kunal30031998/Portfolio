@@ -39,11 +39,11 @@ export function CustomCursor({ mode, color }) {
     <>
       <div ref={dotRef} style={{
         position:'fixed',width:6,height:6,borderRadius:'50%',background:borderColor,
-        pointerEvents:'none',zIndex:9999,top:0,left:0,mixBlendMode:'screen'
+        pointerEvents:'none',zIndex:2147483647,top:0,left:0,mixBlendMode:'screen'
       }}/>
       <div ref={ringRef} style={{
         position:'fixed',width:ringSize,height:ringSize,border:`1.5px solid ${borderColor}`,
-        borderRadius:ringRadius,background:ringBg,pointerEvents:'none',zIndex:9998,top:0,left:0,
+        borderRadius:ringRadius,background:ringBg,pointerEvents:'none',zIndex:2147483646,top:0,left:0,
         transition:'width .25s, height .25s, border-radius .25s, background .25s, border-color .25s'
       }}/>
     </>
