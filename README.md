@@ -53,3 +53,12 @@ Without a key, the widget falls back to `chat.localBrainResponses` in `config.js
 
 This project is released under a **Personal Use License** — free to fork for your own portfolio, not for resale or commercial use. See [LICENSE](LICENSE) for full terms.
 
+<!-- PORTFOLIO:START -->
+
+## 🚀 Portfolio
+
+Live: **[https://portfolio.kunal-gautam-570.workers.dev/](https://portfolio.kunal-gautam-570.workers.dev/)**
+
+Interactive 3D portfolio with project case studies, experience timeline, and contact details.
+
+<!-- PORTFOLIO:END -->
