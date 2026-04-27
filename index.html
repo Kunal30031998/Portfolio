@@ -91,6 +91,40 @@
         page_title: document.title,
         page_location: window.location.href
       });
+
+      // ── Section visibility tracking ──────────────────────────────────────
+      // Fires a GA4 event when each portfolio section enters the viewport.
+      // In GA4: Events → section_view; dimension: section_name.
+      document.addEventListener('DOMContentLoaded', () => {
+        const SECTIONS = ['hero','about','projects','skills','experience','terminal','contact'];
+        const seen = new Set();
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting && !seen.has(e.target.id)) {
+              seen.add(e.target.id);
+              gtag('event', 'section_view', { section_name: e.target.id });
+            }
+          });
+        }, { threshold: 0.3 });
+        SECTIONS.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) io.observe(el);
+        });
+
+        // ── Resume download click tracking ──────────────────────────────
+        document.addEventListener('click', (e) => {
+          const link = e.target.closest('a[href]');
+          if (!link) return;
+          const href = link.getAttribute('href') || '';
+          if (href.includes('Resume') || href.includes('.pdf')) {
+            gtag('event', 'resume_download', { file_name: href.split('/').pop() });
+          }
+          // Outbound links (GitHub, LinkedIn)
+          if (link.hostname && link.hostname !== location.hostname) {
+            gtag('event', 'outbound_click', { link_url: link.href, link_text: link.innerText?.trim().slice(0,60) });
+          }
+        });
+      });
     </script>
 
     <style>html,body,#root{margin:0;padding:0;background:#020408;color:#e8edf5;overflow-x:hidden}</style>
