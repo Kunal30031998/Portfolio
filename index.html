@@ -123,11 +123,30 @@
           if (href.includes('Resume') || href.includes('.pdf')) {
             gtag('event', 'resume_download', { file_name: href.split('/').pop() });
           }
+          // Project / experience CTA clicks
+          const cta = e.target.closest('[data-cta]');
+          if (cta) {
+            gtag('event', 'cta_click', { cta_label: cta.dataset.cta });
+          }
           // Outbound links (GitHub, LinkedIn)
           if (link.hostname && link.hostname !== location.hostname) {
             gtag('event', 'outbound_click', { link_url: link.href, link_text: link.innerText?.trim().slice(0,60) });
           }
         });
+
+        // ── Scroll depth tracking (25 / 50 / 75 / 100%) ────────────────
+        const depthsFired = new Set();
+        window.addEventListener('scroll', () => {
+          const scrolled = window.scrollY;
+          const total = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+          const pct = Math.round((scrolled / total) * 100);
+          [25, 50, 75, 100].forEach(d => {
+            if (pct >= d && !depthsFired.has(d)) {
+              depthsFired.add(d);
+              gtag('event', 'scroll_depth', { depth_percent: d });
+            }
+          });
+        }, { passive: true });
       });
     </script>
 

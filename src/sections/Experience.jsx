@@ -79,7 +79,7 @@ function ExperienceCard({ n, i, inView, onOpenExperience, onHoverBtn, onUnhover 
             textDecoration: 'none',
           }}
         >
-          Warp In
+          View Details
           <ArrowUpRight size={13} strokeWidth={1.8} />
         </a>
       </div>
@@ -87,7 +87,7 @@ function ExperienceCard({ n, i, inView, onOpenExperience, onHoverBtn, onUnhover 
   );
 }
 
-export function Experience({ onOpenExperience, onHoverBtn, onUnhover }) {
+export function Experience({ onOpenExperience, onHoverBtn, onUnhover, scrollTo }) {
   const ref = useRef(null);
   const inView = useInView(ref, { threshold: 0.1 });
   const { eyebrow, title, kicker } = config.sections.experience;
@@ -126,6 +126,21 @@ export function Experience({ onOpenExperience, onHoverBtn, onUnhover }) {
                 Currently shipping →
               </span>
             </div>
+          </div>
+
+          {/* Section-end CTA */}
+          <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => scrollTo?.('contact')}
+              className="skeuo-btn font-mono"
+              style={{
+                padding: '12px 20px', color: 'var(--accent)', borderRadius: 10,
+                fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', cursor: 'none',
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+              }}
+            >
+              Contact Me <ArrowUpRight size={13} strokeWidth={1.8} />
+            </button>
           </div>
         </div>
       </div>

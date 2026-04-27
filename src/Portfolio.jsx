@@ -444,7 +444,7 @@ export default function Portfolio() {
   return (
     <>
       <GlobalStyle />
-      <LoadingScreen progress={progress} done={sceneReady} />
+      <LoadingScreen progress={progress} done={sceneReady} onSkip={() => setSceneReady(true)} />
       <CustomCursor mode={cursorMode} color={cursorColor} />
 
       {/* Fixed WebGL canvas — behind everything */}
@@ -479,9 +479,9 @@ export default function Portfolio() {
         >
           <Hero       onHoverBtn={hoverBtn} onUnhover={unhover} scrollTo={scrollToSection} reducedMotion={reducedMotion} />
           <About />
-          <Projects   onHoverCard={hoverCard} onUnhover={unhover} onHoverBtn={hoverBtn} onOpenProject={openProject} />
+          <Projects   onHoverCard={hoverCard} onUnhover={unhover} onHoverBtn={hoverBtn} onOpenProject={openProject} scrollTo={scrollToSection} />
           <Skills />
-          <Experience onOpenExperience={openExperience} onHoverBtn={hoverBtn} onUnhover={unhover} />
+          <Experience onOpenExperience={openExperience} onHoverBtn={hoverBtn} onUnhover={unhover} scrollTo={scrollToSection} />
           <Terminal   onViewSource={() => setShowSourceViewer(true)} />
           <Contact    onHoverBtn={hoverBtn} onUnhover={unhover} />
           <Footer />

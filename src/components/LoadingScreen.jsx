@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { config } from '../data/content';
 
 /* Full-screen name + progress bar shown while CDN scripts load + GPU compiles. */
-export function LoadingScreen({ progress, done }) {
+export function LoadingScreen({ progress, done, onSkip }) {
   const { firstName } = config.owner;
+  const [showSkip, setShowSkip] = useState(false);
+
+  useEffect(() => {
+    if (done) return;
+    const t = setTimeout(() => setShowSkip(true), 3500);
+    return () => clearTimeout(t);
+  }, [done]);
+
   // progress 0-100 = CDN scripts; once scripts are done we wait for sceneReady (done=true).
   // Show a "Compiling shaders" phase when scripts are at 100% but scene isn't ready yet.
   const compiling = progress >= 100 && !done;
@@ -27,6 +35,22 @@ export function LoadingScreen({ progress, done }) {
       <div className="font-mono" style={{marginTop:'1.25rem',fontSize:10,color:'var(--text-faint)',letterSpacing:'0.35em',textTransform:'uppercase',transition:'opacity .3s'}}>
         {label}
       </div>
+      {showSkip && !done && (
+        <button
+          onClick={onSkip}
+          className="font-mono"
+          style={{
+            marginTop:'2rem', background:'transparent', border:'1px solid rgba(167,231,243,0.25)',
+            color:'var(--text-dim)', padding:'8px 20px', borderRadius:999, fontSize:10,
+            letterSpacing:'0.28em', textTransform:'uppercase', cursor:'pointer',
+            transition:'border-color .2s, color .2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(167,231,243,0.6)'; e.currentTarget.style.color='var(--accent)'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(167,231,243,0.25)'; e.currentTarget.style.color='var(--text-dim)'; }}
+        >
+          Skip Intro →
+        </button>
+      )}
     </div>
   );
 }

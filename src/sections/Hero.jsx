@@ -91,8 +91,7 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
             fontWeight: 700,
             lineHeight: 0.92,
             textAlign: 'left',
-            opacity: nameVisible ? 1 : 0,
-            transition: 'opacity 0.55s ease 0.1s',
+          opacity: 1,
           }}
         >
           {firstName}
@@ -146,7 +145,7 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
             color: 'var(--text-dim)',
             maxWidth: 540,
             textAlign: 'left',
-            animationDelay: '1.8s',
+            animationDelay: '0.3s',
             lineHeight: 1.65,
             fontWeight: 400,
           }}

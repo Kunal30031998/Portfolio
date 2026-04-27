@@ -87,7 +87,7 @@ function ProjectCard({ p, index, onHoverCard, onUnhover, onHoverBtn, onOpen }) {
             display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none',
           }}
         >
-          Warp In
+          View Case Study
           <ArrowUpRight size={13} strokeWidth={1.8} />
         </a>
       </div>
@@ -95,7 +95,7 @@ function ProjectCard({ p, index, onHoverCard, onUnhover, onHoverBtn, onOpen }) {
   );
 }
 
-export function Projects({ onHoverCard, onUnhover, onHoverBtn, onOpenProject }) {
+export function Projects({ onHoverCard, onUnhover, onHoverBtn, onOpenProject, scrollTo }) {
   const { eyebrow, title, kicker } = config.sections.projects;
   return (
     <section id="projects" className="section-scrim section-shell">
@@ -119,6 +119,33 @@ export function Projects({ onHoverCard, onUnhover, onHoverBtn, onOpenProject }) 
                 onOpen={onOpenProject}
               />
             ))}
+          </div>
+
+          {/* Section-end CTA — nudge recruiter to experience next */}
+          <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <button
+              onClick={() => scrollTo?.('experience')}
+              className="skeuo-btn font-mono"
+              style={{
+                padding: '12px 20px', color: 'var(--accent)', borderRadius: 10,
+                fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', cursor: 'none',
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+              }}
+            >
+              See My Journey <ArrowUpRight size={13} strokeWidth={1.8} />
+            </button>
+            <button
+              onClick={() => scrollTo?.('contact')}
+              className="skeuo-btn font-mono"
+              style={{
+                padding: '12px 20px', color: 'var(--warm)',
+                borderColor: 'rgba(234,191,138,0.35)', borderRadius: 10,
+                fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', cursor: 'none',
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+              }}
+            >
+              Let's Work Together <ArrowUpRight size={13} strokeWidth={1.8} />
+            </button>
           </div>
         </div>
       </div>
