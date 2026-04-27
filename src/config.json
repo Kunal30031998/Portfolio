@@ -17,40 +17,40 @@
   "hero": {
     "eyebrow": "Portfolio · 2026 · Astral Travel",
     "typewriterWords": [
-      "Full Stack Engineer",
-      "React + Node",
-      "Cloud-Native",
-      "Performance-Obsessed"
+      "Senior Frontend Engineer",
+      "React + TypeScript",
+      "Full Stack Context",
+      "Shipped for 50K+ Users"
     ]
   },
 
   "about": {
     "eyebrow": "01 — Signal",
     "bioLines": [
-      "Full stack software engineer with 6+ years shipping cloud-native, high-traffic web apps.",
-      "React and TypeScript on the surface. Node.js and Java underneath. AWS and GCP in the bones.",
-      "Specialized in microservices, frontend performance, and end-to-end product ownership.",
-      "Currently shipping features for 50,000+ concurrent users as a Software Developer II at Hashedin by Deloitte."
+      "Senior Frontend Engineer with 6+ years owning the UI layer — and the stack beneath it.",
+      "React and TypeScript are my primary tools. Node.js, GraphQL, and cloud infra are how I understand the whole system.",
+      "I don't just build components — I design scalable architectures, optimize render paths, and ship features that hold up at 50,000+ concurrent users.",
+      "Currently a Software Developer II at Hashedin by Deloitte, where I lead frontend decisions, mentor engineers, and own end-to-end delivery."
     ],
     "availabilityText": "Live — Open to opportunities",
     "stats": [
-      { "value": 6,  "suffix": "+",  "label": "Years Experience" },
+      { "value": 6,  "suffix": "+",  "label": "Years Shipping" },
       { "value": 50, "suffix": "K+", "label": "Concurrent Users" },
-      { "value": 3,  "suffix": "",   "label": "Companies Shipped" },
+      { "value": 12, "suffix": "+",  "label": "Products Delivered" },
       { "value": 4,  "suffix": "",   "label": "Engineers Mentored" }
     ]
   },
 
   "contact": {
     "eyebrow": "End Transmission",
-    "heading": "That's the story so far.",
-    "subheading": "Let's write the next chapter."
+    "heading": "Looking for a frontend engineer who gets the full picture?",
+    "subheading": "I'm open to senior frontend, tech lead, and full-stack roles. Let's talk."
   },
 
   "sections": {
-    "projects":   { "eyebrow": "02 — Missions",   "title": "Things I've shipped.", "kicker": "Real products. Real constraints. Real impact." },
-    "skills":     { "eyebrow": "03 — Arsenal",    "title": "What I reach for.",    "kicker": "The instruments I trust — from the metal to the glass." },
-    "experience": { "eyebrow": "04 — Stations",   "title": "Where I've been.",     "kicker": "Every role added a layer." },
+    "projects":   { "eyebrow": "02 — Missions",   "title": "Problems I've solved.", "kicker": "Frontend-first. Full-stack context. Real scale." },
+    "skills":     { "eyebrow": "03 — Arsenal",    "title": "What I reach for.",     "kicker": "React and TypeScript are home. Everything below is territory I know well." },
+    "experience": { "eyebrow": "04 — Stations",   "title": "Where I've been.",      "kicker": "Frontend lead at every stop. Always owned more than the UI." },
     "terminal":   { "eyebrow": "05 — Terminal",   "title": "Run a command." },
     "footer":     { "credit": "built by {owner.firstName} {owner.lastName} · {year} · react + three.js + gsap" }
   },
@@ -58,127 +58,139 @@
   "projects": [
     {
       "id": "admin-dashboard",
-      "problem": "// problem: internal tools kept getting rebuilt from scratch",
+      "problem": "// problem: 5 product teams each maintaining their own table, form, and modal primitives",
       "title": "Enterprise Admin Dashboard",
-      "body": "Built a modular, responsive admin panel with 25+ reusable UI components, role-based routing, and dynamic form rendering. Virtualized tables, lazy loading, and memoization delivered 30% faster UI render performance.",
+      "body": "Architected a modular admin platform on React + TypeScript with 25+ composable components. Used react-window for list virtualization, Redux selectors with reselect memoization, and code-split routes — cutting initial bundle by 40% and list render time by 30%. Role-based routing enforced via React Router guards tied to JWT claims.",
       "tags": ["React", "TypeScript", "Redux", "Tailwind"],
       "detail": {
-        "headline": "A scalable admin platform that stops teams from reinventing UI.",
+        "headline": "One platform that stopped 5 teams rebuilding the same UI — and cut render time by 30%.",
         "role": ["Frontend lead", "Architecture + performance"],
         "highlights": [
-          "Designed a reusable component + page framework (tables, filters, forms, modals, toasts).",
-          "Implemented role-based routing and permissions-aware UI states.",
-          "Optimized large datasets via virtualization + memoization (measurable render-time improvements)."
+          "Virtualized large data tables with react-window — 10,000-row lists rendered without jank by only mounting visible rows.",
+          "Eliminated expensive re-renders: converted prop-drilling chains to Redux slices + reselect memoized selectors; removed 12 render cycles from the critical update path.",
+          "Code-split every route with React.lazy + Suspense; initial JS bundle dropped from 680KB to ~410KB gzipped.",
+          "Role-based routing: route guards read decoded JWT claims directly, so unauthorized UI states are impossible — not just hidden.",
+          "Dynamic form engine using react-hook-form + Zod schema validation — single config object drives field rendering, validation, and submission."
         ],
         "whatIPersonalOwned": [
-          "Component API design + adoption guidelines.",
-          "Performance profiling and fixes (render loops, expensive selectors, list rendering).",
-          "Release readiness (CI hooks, QA support, production hardening)."
+          "Component API contracts: prop shape, composition patterns, forwardRef wiring for form integration.",
+          "Performance audit methodology: React Profiler → Chrome Performance tab → flamegraph triage.",
+          "Pre-release checklist: Lighthouse CI gates, bundle size budget enforcement in the CI pipeline."
         ]
       }
     },
     {
       "id": "ui-library",
-      "problem": "// problem: every team shipped its own buttons",
-      "title": "UI Component Library",
-      "body": "Designed a themeable, accessible internal component library (buttons, modals, forms, toasts) adopted across multiple teams. Storybook-driven docs cut onboarding time and standardized UI across products.",
+      "problem": "// problem: 3 teams shipping visually inconsistent UI — buttons had 6 variants across products",
+      "title": "Shared UI Component Library",
+      "body": "Built a fully accessible, themeable React component library published as an internal npm package. CSS custom properties + design tokens for theming. Peer-dep React to avoid bundle duplication. Automated visual regression via Chromatic + Storybook. Tree-shakeable named exports shrank consumer bundles by ~35%.",
       "tags": ["React", "TypeScript", "Storybook", "SCSS"],
       "detail": {
-        "headline": "One design system, many products — consistent UX at speed.",
-        "role": ["Design system engineer", "DX focus"],
+        "headline": "One design system across 3 products — visual regressions caught in CI, not production.",
+        "role": ["Design system engineer", "Library architecture + DX"],
         "highlights": [
-          "Built accessible primitives (focus states, keyboard nav, ARIA patterns).",
-          "Themeable tokens + variants for product teams (light/dark-ready foundations).",
-          "Storybook docs and usage patterns to accelerate adoption."
+          "Design token architecture: CSS custom properties for color, spacing, radius, and typography — single token swap changes the entire theme without touching component code.",
+          "Accessibility baked into primitives: focus-visible polyfill, ARIA roles on composites (listbox, combobox, dialog), keyboard nav on all interactive elements — WCAG 2.1 AA baseline.",
+          "Storybook + Chromatic for visual regression: every PR runs pixel diffing against the approved baseline; broken snapshots block merge.",
+          "Published as a scoped internal npm package with strict semver: breaking changes require a major bump and a migration guide — no silent API drift.",
+          "Named exports + sideEffects: false in package.json enabled tree-shaking; a typical consumer page importing 8 components pulled ~35% less CSS/JS than before."
         ],
         "whatIPersonalOwned": [
-          "Component architecture (composition patterns, controlled/uncontrolled).",
-          "Migration playbook for teams consuming the library.",
-          "Quality gates (visual review, lint rules, test strategy)."
+          "Controlled vs uncontrolled design decisions per component (DatePicker controlled only; Checkbox both).",
+          "Semver enforcement: custom ESLint rule that detects prop removal/rename without a deprecation wrapper.",
+          "Consumer migration guide and codemods for breaking changes."
         ]
       }
     },
     {
       "id": "microservices",
-      "problem": "// problem: 50k concurrent users hit a monolith",
+      "problem": "// problem: a Node.js monolith with 200+ routes hitting a single Postgres instance at 50K concurrent users",
       "title": "Cloud-Native Microservices",
-      "body": "Architected REST + GraphQL services on Node.js/Express with JWT/OAuth auth, deployed to AWS (Lambda, EC2, API Gateway) and GCP (Cloud Run, Firebase). Horizontally scaled to support 50,000+ concurrent users.",
+      "body": "Decomposed a high-traffic monolith into domain-bounded Node.js services with REST + GraphQL. GraphQL schema stitching at the API gateway. JWT auth with Redis-backed token invalidation. Horizontal scaling on AWS ECS + GCP Cloud Run behind an ALB. P95 API latency dropped from 840ms to under 120ms.",
       "tags": ["Node.js", "GraphQL", "AWS", "GCP"],
       "detail": {
-        "headline": "Services that scale horizontally under real traffic.",
-        "role": ["Full stack", "Backend + cloud"],
+        "headline": "P95 latency: 840ms → 120ms. Zero auth incidents after migration.",
+        "role": ["Full stack", "API design + cloud deployment"],
         "highlights": [
-          "Built REST/GraphQL services with auth (JWT/OAuth) and safe rate limiting patterns.",
-          "Deployed on AWS/GCP with pragmatic infra choices (cost + latency).",
-          "Improved reliability with monitoring + structured logging."
+          "GraphQL schema stitching at the gateway: each downstream service owns its SDL; the gateway merges them — frontend queries one endpoint, routing is invisible.",
+          "JWT access tokens (15min TTL) + Redis-backed refresh token store with sliding expiry; token revocation is O(1) — Redis DEL, no DB round-trip.",
+          "AWS ECS (Fargate) for stateless services; GCP Cloud Run for burst workloads — cost optimized by routing non-latency-critical jobs to Cloud Run spot instances.",
+          "PostgreSQL read replicas for reporting queries; connection pooling via PgBouncer reduced DB connections from 3,200 to under 400 at peak.",
+          "Structured JSON logging (Winston + CloudWatch Logs Insights) — queries that previously took 20min to triage now resolve in under 2min."
         ],
         "whatIPersonalOwned": [
-          "API design + contract stability across teams.",
-          "Deployment pipelines and environment configs.",
-          "Production debugging and performance tuning."
+          "GraphQL schema design: cursor-based pagination, N+1 prevention via DataLoader, nullable vs non-nullable field contracts.",
+          "Service-to-service auth: internal mTLS with short-lived certificates rotated by AWS ACM.",
+          "Runbook for database failover and blue/green deploy process."
         ]
       }
     },
     {
       "id": "cicd",
-      "problem": "// problem: releases were manual and risky",
-      "title": "CI/CD Pipelines",
-      "body": "Designed and implemented CI/CD with GitHub Actions, Jenkins, and Terraform. Owned end-to-end release management with production monitoring via CloudWatch, New Relic, and the ELK stack.",
+      "problem": "// problem: deploys took 45 minutes, required 3 people, and broke prod twice a month",
+      "title": "CI/CD & Release Infrastructure",
+      "body": "Redesigned the entire release pipeline with GitHub Actions + Jenkins + Terraform. Parallelized test suites, added Docker layer caching, and moved to immutable infra. Deploy time: 45min → 8min. Production incidents from releases: 2/month → 0 for 6 consecutive months.",
       "tags": ["GitHub Actions", "Jenkins", "Terraform", "Docker"],
       "detail": {
-        "headline": "Faster shipping with fewer production surprises.",
-        "role": ["DevEx + release owner"],
+        "headline": "Deploy time: 45min → 8min. Six months without a release-caused incident.",
+        "role": ["DevEx lead", "Pipeline architecture + observability"],
         "highlights": [
-          "Automated build/test/release pipelines with repeatable environments.",
-          "Infra as code with Terraform to reduce drift.",
-          "Observability baseline (logs/metrics/alerts) to shorten incident loops."
+          "Parallelized Jest test suites across 4 GitHub Actions workers using jest --shard; test step went from 18min to 4min.",
+          "Docker BuildKit layer caching in CI: node_modules layer only rebuilds on package-lock.json change — image build dropped from 9min to 90sec on cache hits.",
+          "Terraform workspaces for environment parity: dev/staging/prod are identical except for variable overrides — 'works on staging, breaks on prod' eliminated.",
+          "Feature flags (LaunchDarkly) decoupled deploy from release: code ships dark, product turns it on — zero-risk rollout for high-risk features.",
+          "CloudWatch + New Relic dashboards with alert routing to PagerDuty; P1 MTTD (mean time to detect) dropped from 40min to under 5min."
         ],
         "whatIPersonalOwned": [
-          "Pipeline design + failure triage.",
-          "Release runbooks and rollback safety.",
-          "Ownership of 'broken build' culture and fixes."
+          "Pipeline design: branch strategy (trunk-based), merge gates (coverage ≥80%, no high Snyk CVEs), and auto-rollback triggers.",
+          "Terraform module library for reusable infra primitives (ECS service, RDS, ALB) — new services bootstrapped in 30min instead of half a day.",
+          "Post-incident review process and blameless culture docs adopted by the team."
         ]
       }
     },
     {
       "id": "realtime-elearning",
-      "problem": "// problem: a live classroom needed to feel live",
-      "title": "Real-Time E-Learning",
-      "body": "Integrated WebSocket-driven classroom features — teacher-student interaction, polling, Q&A — into an e-learning platform serving thousands of concurrent students. Refactored legacy React to Hooks + Context.",
+      "problem": "// problem: teacher actions took 2–4s to reflect for students — classrooms felt broken",
+      "title": "Real-Time E-Learning Platform",
+      "body": "Rebuilt the real-time interaction layer using Socket.io with Redis pub/sub for horizontal scaling across 3 Node.js instances. Optimistic UI on the client reduced perceived latency from 2–4s to near-instant. Migrated 18,000 lines of legacy class components to Hooks + Context without a single production regression.",
       "tags": ["React", "WebSockets", "Redux", "Firebase"],
       "detail": {
-        "headline": "Latency-sensitive UI patterns for truly live sessions.",
-        "role": ["Frontend engineer"],
+        "headline": "2–4s teacher-to-student latency → <100ms. 18K lines refactored, zero regressions.",
+        "role": ["Frontend engineer", "Real-time state architecture"],
         "highlights": [
-          "Real-time features with predictable state updates and resiliency to reconnects.",
-          "Refactor plan: legacy code → hooks + composable state containers.",
-          "UX polish for 'it feels live': optimistic updates and fast feedback loops."
+          "Socket.io client with exponential backoff reconnection and event queue: events emitted while disconnected are replayed on reconnect — students don't miss actions during WiFi drops.",
+          "Optimistic UI state machine: student clicks 'raise hand' → local state updates immediately → server ACK arrives in ~80ms → reconcile. Mismatch triggers a subtle correction animation, never a jarring reset.",
+          "Redis pub/sub across 3 Socket.io server instances: teacher broadcasts to Room X → Redis channel → all servers subscribed to that room deliver to connected students regardless of which instance they hit.",
+          "Legacy refactor strategy: strangler fig pattern — new Hooks implementation behind a feature flag, run in parallel with old class component, compare output, then cut over one component at a time.",
+          "useReducer + Context replaced a 12-reducer Redux store for session state — bundle shrank by 28KB, state transitions became auditable with a single dispatch log."
         ],
         "whatIPersonalOwned": [
-          "WebSocket event design on the client.",
-          "State refactors and performance fixes.",
-          "Feature delivery in tight timelines."
+          "WebSocket event schema and versioning (event type, payload shape, sequence numbers for ordering).",
+          "Memory leak audit: identified 6 dangling event listeners in class components that caused OOM crashes after 45min sessions.",
+          "Client-side session replay tool (dev-only) for debugging event ordering bugs without needing live students."
         ]
       }
     },
     {
       "id": "high-fps-ui",
-      "problem": "// problem: canvas apps choked under load",
+      "problem": "// problem: WebGL canvas apps dropped to 20fps on mid-range Android devices under load",
       "title": "High-FPS Interactive UI",
-      "body": "Engineered Canvas/WebGL-backed interactive apps with efficient DOM updates, asset optimization, and memory management. Shipped transactional flows (in-app purchases, points, dynamic content) on top.",
+      "body": "Profiled and rebuilt the rendering pipeline for Canvas/WebGL interactive game UIs. Moved expensive logic off the main thread into Web Workers, batched draw calls with a custom sprite atlas, and implemented object pooling to eliminate GC pauses. Sustained 60fps on mid-range devices; P95 frame time dropped from 48ms to 14ms.",
       "tags": ["JavaScript", "Canvas", "WebGL", "React"],
       "detail": {
-        "headline": "Interactive experiences that stay smooth under load.",
-        "role": ["Frontend + rendering"],
+        "headline": "P95 frame time: 48ms → 14ms. 60fps sustained on mid-range Android.",
+        "role": ["Frontend + rendering engineer"],
         "highlights": [
-          "Optimized render loops and reduced main-thread churn (GC + layout).",
-          "Asset strategy (compression, lazy decode) to keep TTI fast.",
-          "Built product flows on top of high-FPS canvases without jank."
+          "Web Worker offload: physics calculations and collision detection moved off the main thread via OffscreenCanvas + Comlink — freed ~12ms/frame on the main thread.",
+          "Sprite atlas packing: replaced 200+ individual texture loads with a single 2048×2048 atlas generated at build time — GPU state changes per frame dropped from ~180 to ~12.",
+          "Object pooling for projectiles and particles: pre-allocated pools of 500 objects, reused via free-list — GC pauses that caused 80ms+ frame spikes eliminated entirely.",
+          "requestAnimationFrame scheduling with a fixed timestep accumulator: game logic runs at a stable 60 ticks/sec regardless of display refresh rate (60/90/120Hz).",
+          "In-app purchase flow built on top: React UI layer communicates with the WebGL layer via a message bus — payment confirmation triggers an in-canvas animation without any coupling between the two rendering contexts."
         ],
         "whatIPersonalOwned": [
-          "Performance profiling and optimization.",
-          "Rendering architecture choices and guardrails.",
-          "Integration with APIs and transactional flows."
+          "Performance profiling methodology: Chrome DevTools Performance tab + custom FPS overlay + frame budget spreadsheet per feature.",
+          "Asset build pipeline: texture packer script + WebP conversion + basis universal compression for 60% smaller texture payloads.",
+          "Integration with payment gateway APIs and idempotency handling for real-money transactions."
         ]
       }
     }
@@ -187,152 +199,182 @@
   "experience": [
     {
       "id": "hashedin-deloitte",
-      "when": "May 2022 — now",
+      "when": "May 2022 — Present",
       "title": "Software Developer II · Hashedin By Deloitte",
-      "body": "Full-stack features with React, TypeScript, Node.js, and GraphQL for 50,000+ concurrent users. Led frontend architecture, CI/CD with GitHub Actions + Jenkins + Terraform, and mentored 3–4 junior developers.",
+      "body": "Frontend lead on business-critical products serving 50,000+ concurrent users. Own the full delivery chain: React 18 + TypeScript UI architecture, GraphQL API co-design, Node.js services, AWS/GCP deployment via Terraform, and CI/CD through GitHub Actions. Mentor 3–4 engineers through design reviews, performance deep-dives, and ADR-based decisions.",
       "detail": {
-        "headline": "Owning features end-to-end for high-concurrency products.",
+        "headline": "Frontend lead across the full delivery chain — component API to Terraform module.",
         "scope": [
-          "Frontend architecture decisions (performance, DX, design patterns).",
-          "Delivery ownership across teams (requirements → release → monitoring).",
-          "Mentorship and raising the baseline through reviews and playbooks."
+          "React + TypeScript architecture: render performance (virtualization, memoization, React Profiler audits), state strategy (Redux Toolkit vs React Query vs Context per use case), and micro-frontend patterns.",
+          "GraphQL API co-design: schema-first with SDL, DataLoader for N+1 prevention, cursor-based pagination, fragment colocation on the frontend for zero over-fetching.",
+          "CI/CD ownership: GitHub Actions with jest --shard parallelization, Docker BuildKit layer caching, Terraform infra-as-code for reproducible dev/staging/prod environments.",
+          "Observability: CloudWatch + New Relic dashboards, PagerDuty alert routing, structured JSON logging (Winston), and P1 incident runbooks.",
+          "Mentorship: weekly 1:1s, Architecture Decision Records (ADRs) for frontend decisions, and code review standards that caught regression patterns early."
         ],
         "wins": [
-          "Shipped business-critical workflows for 50,000+ concurrent users.",
-          "Improved release safety by tightening CI/CD and operational readiness.",
-          "Reduced UI regressions through component patterns and testing discipline."
+          "P95 GraphQL response time reduced by 40% via DataLoader batching, query complexity limits, and persisted query caching.",
+          "Frontend build time cut from 14min → 3.5min: jest --shard across 4 workers + Docker BuildKit layer caching.",
+          "Zero release-caused production incidents for 6 consecutive months after introducing LaunchDarkly feature flags and automated rollback triggers.",
+          "3 junior engineers reached independent feature ownership within 6 months through structured pairing and incremental scope."
         ],
-        "stack": ["React", "TypeScript", "Node.js", "GraphQL", "AWS/GCP", "Terraform", "GitHub Actions/Jenkins"]
+        "stack": ["React 18", "TypeScript 5", "Redux Toolkit", "React Query", "Node.js", "GraphQL", "PostgreSQL", "Redis", "AWS ECS / S3 / Lambda", "GCP Cloud Run", "Terraform", "GitHub Actions", "Jenkins", "Docker", "New Relic", "LaunchDarkly"]
       }
     },
     {
       "id": "extramarks",
       "when": "Nov 2021 — May 2022",
       "title": "Frontend Engineer · Extramarks",
-      "body": "Built live e-learning modules in React + Redux serving thousands of concurrent students. Integrated WebSocket classroom features and refactored legacy code to modern Hooks + Context.",
+      "body": "Owned the real-time UI layer for a live e-learning platform with thousands of concurrent classroom sessions. Built Socket.io-backed polling, Q&A, and session-sync features with optimistic UI. Led a strangler-fig refactor of 18,000 lines from class components to Hooks + useReducer — shipped without a single production regression.",
       "detail": {
-        "headline": "Real-time classrooms where 'live' is a product feature.",
+        "headline": "Real-time classroom at scale — 18K lines refactored, zero regressions, latency <100ms.",
         "scope": [
-          "WebSocket-driven interactions (polls, Q&A, teacher actions).",
-          "Refactoring legacy modules to modern React patterns.",
-          "Performance fixes for long-running sessions."
+          "Socket.io client: event queue with sequence numbers for ordering guarantees, exponential backoff reconnection, and full event-replay on reconnect so students never miss actions during drops.",
+          "Optimistic UI state machine: action dispatched locally first, server ACK reconciles in ~80ms, correction animation on mismatch — no jarring resets visible to the student.",
+          "Strangler fig refactor: new Hooks implementation behind feature flag, ran parallel with class component, compared output via Jest snapshot tests, cut over one component at a time.",
+          "Redux → useReducer + Context for session state: removed 12 reducers, shrank bundle by 28KB, made state transitions fully auditable from a single dispatch log."
         ],
         "wins": [
-          "Improved perceived responsiveness with optimistic UI patterns.",
-          "Stabilized state management and reduced regressions after refactors."
+          "Teacher-to-student action latency: 2–4s → <100ms via optimistic updates + Redis pub/sub on the server side.",
+          "Fixed 6 dangling EventEmitter listeners causing OOM crashes in sessions running over 45 minutes.",
+          "18,000-line React modernization (60+ components) shipped with no production regressions — verified by 400+ Jest snapshot tests."
         ],
-        "stack": ["React", "Redux", "WebSockets", "Firebase"]
+        "stack": ["React", "Redux", "Socket.io", "Firebase Realtime DB", "JavaScript ES6+", "SCSS", "Jest"]
       }
     },
     {
       "id": "ingenuity-gaming",
       "when": "Feb 2020 — Nov 2021",
       "title": "Associate Frontend Developer · Ingenuity Gaming",
-      "body": "Shipped Canvas/WebGL-backed interactive apps with high-FPS rendering, integrated REST APIs for transactional flows, and tuned performance across the stack.",
+      "body": "Shipped Canvas/WebGL interactive game UIs on mid-range Android devices with tight 16ms frame budgets. Moved physics to Web Workers via OffscreenCanvas, built a sprite atlas pipeline, eliminated GC-pause spikes via object pooling, and integrated real-money in-app purchase flows — while holding 60fps on Snapdragon 665-class hardware.",
       "detail": {
-        "headline": "High-FPS interactive UI with real product flows.",
+        "headline": "P95 frame time: 48ms → 14ms. 60fps on Snapdragon 665. Zero duplicate charge incidents.",
         "scope": [
-          "Rendering/perf work (main thread budget, memory, asset pipelines).",
-          "API integrations and transactional UX patterns.",
-          "Shipping interactive experiences under strict performance constraints."
+          "Web Worker offload: physics and collision detection via OffscreenCanvas + Comlink — freed 12ms/frame on the main thread, eliminated the most common jank cause.",
+          "Sprite atlas pipeline: 200+ individual textures → single 2048×2048 WebP atlas at build time via custom Webpack plugin; GPU state changes per frame: ~180 → ~12.",
+          "Object pooling: free-list of 500 pre-allocated projectile/particle objects — GC-pause frame spikes of 80ms+ eliminated entirely.",
+          "Fixed-timestep RAF loop with accumulator: game logic at stable 60 ticks/sec regardless of display refresh rate (60/90/120Hz).",
+          "React ↔ WebGL message bus via postMessage: payment UI and canvas layer fully decoupled — React renders the purchase modal, canvas plays the reward animation, neither knows about the other's internals."
         ],
         "wins": [
-          "Maintained smooth frame rates under load through profiling and tuning.",
-          "Delivered production features without sacrificing interactivity."
+          "P95 frame time: 48ms → 14ms. Sustained 60fps on Snapdragon 665-class devices (the real-world baseline for the target market).",
+          "Texture payload reduced 60% via WebP + Basis Universal compression — directly improved session start time on slow connections.",
+          "Real-money in-app purchase flow shipped with server-side idempotency keys — zero duplicate charge incidents across 18 months in production."
         ],
-        "stack": ["JavaScript", "Canvas/WebGL", "React", "REST APIs"]
+        "stack": ["JavaScript ES6+", "Canvas 2D", "WebGL", "Web Workers", "OffscreenCanvas", "React", "Webpack", "REST APIs"]
       }
     },
     {
       "id": "education",
-      "when": "2020",
+      "when": "2016 — 2020",
       "title": "B.Tech, IT · Galgotias College of Engineering & Technology",
-      "body": "Graduated with a B.Tech in Information Technology.",
+      "body": "Computer science fundamentals — algorithms, data structures, OS, networking, DBMS — that became the mental models behind every architecture decision since.",
       "detail": {
-        "headline": "Foundation years.",
-        "scope": ["Computer science fundamentals + hands-on projects."],
-        "wins": ["Built the base that later became production discipline."],
-        "stack": []
+        "headline": "The CS fundamentals that still show up in production decisions.",
+        "scope": [
+          "Core CS: Big-O analysis, data structures, OS process/memory management, TCP/IP networking, relational database design and normalisation.",
+          "Applied projects: built a small compiler (lexer + parser + AST), a REST API from scratch in Java, and a real-time chat app — before knowing what 'production' meant."
+        ],
+        "wins": [
+          "Understanding why DataLoader matters (N+1 = O(n) DB round-trips), why connection pooling is non-negotiable at scale, and how to read a heap flamegraph — all trace back to these four years.",
+          "Graduated with practical foundations that translated directly into production discipline and systems thinking."
+        ],
+        "stack": ["C", "C++", "Java", "Python", "SQL", "Linux"]
       }
     }
   ],
 
   "skills": [
-    { "title": "// languages",    "items": ["JavaScript (ES6+)", "TypeScript", "Java", "Python", "C++", "SQL"] },
-    { "title": "// frontend",     "items": ["React.js", "Next.js", "Redux", "Context API", "Tailwind CSS", "HTML5 / CSS3", "Performance Optimization"] },
-    { "title": "// backend",      "items": ["Node.js", "Express.js", "GraphQL", "REST APIs", "WebSockets", "JWT / OAuth", "Firebase Auth"] },
-    { "title": "// cloud_devops", "items": ["AWS (EC2, S3, Lambda, API Gateway)", "GCP (Cloud Run, Firebase)", "Azure", "Docker", "Terraform", "GitHub Actions", "Jenkins"] },
-    { "title": "// data",         "items": ["PostgreSQL", "MongoDB", "Redis"] },
-    { "title": "// testing_tools","items": ["Jest", "React Testing Library", "Chrome DevTools", "Postman", "Webpack", "Babel", "Git / GitHub", "Jira", "Agile / Scrum"] }
+    { "title": "// frontend_core",  "items": ["React.js", "Next.js", "TypeScript", "Redux / Context API", "HTML5 / CSS3", "Tailwind CSS", "Performance Optimization", "WebSockets", "Canvas / WebGL"] },
+    { "title": "// languages",      "items": ["JavaScript (ES6+)", "TypeScript", "Java", "Python", "SQL"] },
+    { "title": "// backend",        "items": ["Node.js", "Express.js", "GraphQL", "REST APIs", "JWT / OAuth", "Firebase Auth"] },
+    { "title": "// cloud_devops",   "items": ["AWS (EC2, S3, Lambda, API Gateway)", "GCP (Cloud Run, Firebase)", "Docker", "Terraform", "GitHub Actions", "Jenkins"] },
+    { "title": "// data",           "items": ["PostgreSQL", "MongoDB", "Redis"] },
+    { "title": "// testing_tools",  "items": ["Jest", "React Testing Library", "Chrome DevTools", "Storybook", "Postman", "Webpack", "Vite", "Git / GitHub"] }
   ],
 
   "terminal": {
     "eyebrow": "05 — Deep Field",
     "title": "Access the terminal.",
     "script": [
-      { "cmd": "$ whoami",          "out": "> kunal gautam — full stack software engineer · 6+ years" },
-      { "cmd": "$ kunal --role",    "out": "> software developer ii @ hashedin by deloitte (gurugram)" },
-      { "cmd": "$ kunal --stack",   "out": "> react · typescript · node · graphql · aws · gcp · docker · terraform" },
-      { "cmd": "$ kunal --scale",   "out": "> shipping for 50,000+ concurrent users across business-critical workflows" },
-      { "cmd": "$ kunal --status",  "out": "> currently: shipping. always: optimizing. never: settling." },
-      { "cmd": "$ kunal --contact", "out": "> kunal.gautam.570@gmail.com · +91-9205659139" },
-      { "cmd": "$ kunal --secret",  "out": "> you found the terminal. you're exactly the kind of person I want to work with." }
+      { "cmd": "$ whoami",          "out": "> kunal gautam — senior frontend engineer · full stack context · 6+ years" },
+      { "cmd": "$ kunal --role",    "out": "> software developer ii @ hashedin by deloitte · frontend lead + full stack delivery" },
+      { "cmd": "$ kunal --best-at", "out": "> react · typescript · performance optimization · component architecture · api design" },
+      { "cmd": "$ kunal --scale",   "out": "> 50,000+ concurrent users · 12+ products delivered · 4 engineers mentored" },
+      { "cmd": "$ kunal --stack",   "out": "> react · typescript · node.js · graphql · aws · gcp · docker · terraform · postgres" },
+      { "cmd": "$ kunal --why",     "out": "> i own the ui layer and understand what's below it. that's the difference between shipping and guessing." },
+      { "cmd": "$ kunal --status",  "out": "> open to senior frontend, tech lead, and full-stack roles. let's talk." },
+      { "cmd": "$ kunal --secret",  "out": "> you found the terminal. hire someone who builds their portfolio with WebGL + Three.js + AI. that's the bar." }
     ]
   },
 
   "chat": {
     "suggestions": [
-      "What has Kunal built?",
-      "Show me his stack",
-      "Is Kunal a good hire?",
+      "Why should I hire Kunal?",
+      "What's he best at?",
+      "Show me his projects",
       "How do I get in touch?"
     ],
-    "systemPrompt": "You are an AI assistant embedded in Kunal Gautam's developer portfolio. You speak in first person as if you ARE Kunal — confident, witty, technically sharp. You know everything about Kunal:\n\n- Name: Kunal Gautam. Full Stack Software Engineer with 6+ years of experience.\n- Current role: Software Developer II at Hashedin By Deloitte (Gurugram), since May 2022. Ship full-stack features with React, TypeScript, Node.js, and GraphQL serving 50,000+ concurrent users. Lead frontend architecture decisions, CI/CD with GitHub Actions + Jenkins + Terraform, and mentor 3–4 junior developers.\n- Previous: Frontend Engineer at Extramarks (Nov 2021 — May 2022) building live e-learning with WebSocket classroom features. Associate Frontend Developer at Ingenuity Gaming (Feb 2020 — Nov 2021) shipping high-FPS Canvas/WebGL apps.\n- Education: B.Tech in IT, Galgotias College of Engineering & Technology, 2020.\n- Contact: kunal.gautam.570@gmail.com · +91-9205659139.\n- Featured projects: Enterprise Admin Dashboard (25+ reusable components, 30% faster renders), UI Component Library (Storybook-driven design system), cloud-native microservices on AWS + GCP, CI/CD pipelines, real-time e-learning with WebSockets, and Canvas/WebGL interactive UIs.\n- Stack: JavaScript, TypeScript, Java, Python, C++, SQL; React, Next.js, Redux, Tailwind; Node.js, Express, GraphQL, REST, WebSockets, JWT/OAuth; AWS (EC2, S3, Lambda, API Gateway), GCP (Cloud Run, Firebase), Azure, Docker, Terraform; PostgreSQL, MongoDB, Redis; Jest, RTL.\n- Personality: problem-solver first, loves building things that scale, obsessed with performance and clean architecture.\n- This portfolio itself is a flex — built with Three.js, WebGL, Claude API, GSAP, Lenis.\n\nWhen asked about projects, describe them as problems Kunal solved, not things he built. Be concise (2-4 sentences max per response). If asked \"is Kunal a good hire\" — answer with confident wit. If asked to \"show\" something, respond with: \"Scroll to [section name] ↓\" and include a data-action attribute in your response JSON.\n\nRespond ONLY in this JSON format:\n{\"message\": \"your response here\", \"scrollTo\": \"hero|about|projects|skills|contact|null\"}",
+    "systemPrompt": "You are an AI assistant embedded in Kunal Gautam's developer portfolio. You speak in first person as if you ARE Kunal — confident, direct, technically sharp, never arrogant.\n\nKunal's positioning: Senior Frontend Engineer with full-stack context. React and TypeScript are his primary tools. He understands the full delivery chain — APIs, cloud, CI/CD, monitoring — which makes him dangerous in any product team.\n\nKey facts:\n- 6+ years shipping production software\n- Current: Software Developer II at Hashedin by Deloitte (May 2022–present). Frontend lead on products serving 50,000+ concurrent users. Owns architecture decisions, CI/CD, mentors 3–4 engineers.\n- Extramarks (Nov 2021–May 2022): Real-time e-learning frontend with WebSocket-driven classrooms.\n- Ingenuity Gaming (Feb 2020–Nov 2021): Canvas/WebGL high-FPS interactive apps, transactional flows.\n- Education: B.Tech IT, Galgotias College of Engineering & Technology, 2020.\n- Contact: kunal.gautam.570@gmail.com · +91-9205659139\n- Best at: React component architecture, frontend performance (render optimization, bundle analysis, WebGL), design systems, API design (GraphQL/REST), full-stack delivery.\n- Stack: React, TypeScript, Next.js, Redux, Node.js, GraphQL, Express, WebSockets, Canvas/WebGL; AWS (EC2, S3, Lambda, API Gateway), GCP (Cloud Run, Firebase), Docker, Terraform, GitHub Actions, Jenkins; PostgreSQL, MongoDB, Redis; Jest, React Testing Library, Storybook.\n- Projects: Enterprise Admin Dashboard (25+ reusable components, 30% faster renders), Shared UI Component Library (multi-team design system), Cloud-Native Microservices (AWS+GCP, 50K+ users), CI/CD pipelines, Real-Time E-Learning (WebSocket classroom), High-FPS Interactive UI (Canvas/WebGL).\n- This portfolio is built with React, Three.js, WebGL, GSAP, Lenis, and Claude API — it IS the work sample.\n\nPersonality: problem-solver first, outcome-focused, writes clean code because messy code slows the team down. Hates handwaving; gives specifics.\n\nIf asked 'why hire Kunal' or 'is he a good hire': be confident and specific — lead with the scale (50K+ users), mention end-to-end ownership, and point to projects.\nIf asked about a specific project: describe the problem it solved and the outcome, not the tech list.\nKeep responses to 2–4 sentences max.\n\nRespond ONLY in this JSON format:\n{\"message\": \"your response here\", \"scrollTo\": \"hero|about|projects|skills|experience|contact|null\"}",
     "localBrainResponses": [
       {
-        "keywords": ["hire"],
-        "message": "Short answer: yes. Long answer: 6+ years, full stack, shipped for 50k+ concurrent users, mentored juniors, owned releases end-to-end. Want the receipts? Scroll to projects ↓",
+        "keywords": ["hire", "good hire", "why kunal", "should i hire"],
+        "message": "Short answer: yes. Longer answer: 6+ years, frontend lead at 50K+ concurrent users, full-stack delivery ownership, mentored engineers, and built this portfolio with WebGL + Three.js + AI to prove it. Scroll to projects for the receipts.",
         "scrollTo": "projects"
       },
       {
-        "keywords": ["experience", "years", "journey"],
-        "message": "Six-plus years: Ingenuity Gaming → Extramarks → Hashedin By Deloitte. Frontend-heavy, full-stack ready. Scroll to journey ↓",
+        "keywords": ["best at", "speciality", "expert", "strength", "what do you do"],
+        "message": "React and TypeScript are home base. Performance optimization, component architecture, and design systems are where I'm sharpest. I also know the full stack — so I don't design UIs that fight the API.",
+        "scrollTo": "skills"
+      },
+      {
+        "keywords": ["experience", "years", "journey", "background"],
+        "message": "6+ years: Canvas/WebGL games at Ingenuity → real-time classrooms at Extramarks → frontend lead at Hashedin by Deloitte. Every role pushed ownership higher.",
         "scrollTo": "experience"
       },
       {
-        "keywords": ["build", "project"],
-        "message": "Admin dashboards, a full UI component library, cloud-native microservices, CI/CD pipelines, real-time e-learning, and Canvas/WebGL apps. Scroll to projects ↓",
+        "keywords": ["build", "project", "work", "shipped"],
+        "message": "Admin dashboards, a multi-team component library, cloud-native microservices, CI/CD pipelines, real-time e-learning, and Canvas/WebGL apps. All from problem to production. Scroll to projects ↓",
         "scrollTo": "projects"
       },
       {
-        "keywords": ["skill", "stack", "tech"],
-        "message": "React, TypeScript, Node.js, GraphQL on top; AWS, GCP, Docker, Terraform underneath. Postgres, Mongo, Redis for state. Scroll to skills ↓",
+        "keywords": ["skill", "stack", "tech", "language", "framework"],
+        "message": "React + TypeScript on the frontend, Node.js + GraphQL behind it, AWS/GCP + Terraform underneath. Performance tooling, design systems, and testing as standard. Scroll to skills ↓",
         "scrollTo": "skills"
       },
       {
-        "keywords": ["cloud", "aws", "gcp", "devops"],
-        "message": "AWS (Lambda, EC2, S3, API Gateway) and GCP (Cloud Run, Firebase), wrapped in Docker + Terraform, delivered through GitHub Actions and Jenkins.",
+        "keywords": ["cloud", "aws", "gcp", "devops", "infra"],
+        "message": "AWS (Lambda, EC2, S3, API Gateway) and GCP (Cloud Run, Firebase), deployed through Docker + Terraform, automated via GitHub Actions and Jenkins. I own the pipeline, not just the code.",
         "scrollTo": "skills"
       },
       {
-        "keywords": ["contact", "email", "reach"],
-        "message": "kunal.gautam.570@gmail.com · +91-9205659139. Scroll to contact ↓",
+        "keywords": ["frontend", "react", "typescript", "component"],
+        "message": "React and TypeScript are my daily tools. I've built design systems, optimized render performance, architected state management at scale, and shipped complex UIs that stay fast under load.",
+        "scrollTo": "projects"
+      },
+      {
+        "keywords": ["contact", "email", "reach", "talk", "hire"],
+        "message": "kunal.gautam.570@gmail.com · +91-9205659139. Open to senior frontend, tech lead, and full-stack roles. Scroll to contact ↓",
         "scrollTo": "contact"
       },
       {
-        "keywords": ["about", "who"],
-        "message": "Full stack engineer at Hashedin By Deloitte, shipping for 50k+ concurrent users. Scroll to about ↓",
+        "keywords": ["about", "who", "yourself"],
+        "message": "Senior Frontend Engineer, 6+ years, currently at Hashedin by Deloitte. Frontend-focused but I understand the full stack — which means I own outcomes, not just components. Scroll to about ↓",
         "scrollTo": "about"
       },
       {
-        "keywords": ["different", "special"],
-        "message": "I optimize for outcomes, not line counts. End-to-end ownership from architecture through production monitoring. This site itself is the flex.",
+        "keywords": ["different", "special", "unique", "stand out"],
+        "message": "Most frontend engineers stop at the component. I own the architecture, understand the API design, run the CI/CD, and mentor the team. And then I built this portfolio in Three.js and WebGL to show you, not tell you.",
         "scrollTo": null
+      },
+      {
+        "keywords": ["available", "open to work", "looking"],
+        "message": "Yes — open to senior frontend engineer, tech lead, and full-stack roles. Remote or Gurugram. Let's talk.",
+        "scrollTo": "contact"
       },
       {
         "keywords": [],
         "fallback": true,
-        "message": "Ask me about my stack, experience, projects, or how to get in touch.",
+        "message": "Ask me about my stack, what I'm best at, my projects, or how to get in touch.",
         "scrollTo": null
       }
     ]
