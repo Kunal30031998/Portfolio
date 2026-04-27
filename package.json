@@ -6,7 +6,7 @@
   "homepage": "https://portfolio.kunal-gautam-570.workers.dev/",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "rm -rf dist && vite build",
     "preview": "npm run build && wrangler dev",
     "predeploy": "npm run build",
     "deploy": "npm run build && wrangler deploy"
