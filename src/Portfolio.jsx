@@ -158,11 +158,16 @@ export default function Portfolio() {
     };
   }, []);
 
-  /* ── GitHub activity → asteroid density (cosmetic, silently degrades) ── */
+  /* ── GitHub activity → asteroid density (cosmetic, silently degrades) ──
+     PERF: Skip on save-data / slow connections; defer until idle so it never
+     competes with first paint. */
   useEffect(() => {
     if (!ready) return;
+    const conn = navigator.connection;
+    if (conn && (conn.saveData || /(2g|slow-2g)/.test(conn.effectiveType || ''))) return;
+
     let cancelled = false;
-    (async () => {
+    const run = async () => {
       try {
         const res = await fetch('https://github-contributions-api.jogruber.de/v4/kugautam?y=last');
         if (!res.ok || cancelled) return;
@@ -174,8 +179,18 @@ export default function Portfolio() {
           sw.mesh.instanceMatrix.needsUpdate = true;
         });
       } catch (_) {}
-    })();
-    return () => { cancelled = true; };
+    };
+
+    // Run after paint, in idle time
+    const idle =
+      window.requestIdleCallback ||
+      ((cb) => window.setTimeout(cb, 1500));
+    const idleId = idle(run, { timeout: 4000 });
+
+    return () => {
+      cancelled = true;
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idleId);
+    };
   }, [ready]);
 
   /* ── Active-section IntersectionObserver (drives NavPill highlight) ──── */

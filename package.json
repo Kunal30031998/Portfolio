@@ -1,15 +1,15 @@
 {
-  "name": "active-theory-portfolio",
+  "name": "kunal-gautam-portfolio",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
-  "homepage": "https://github.io/Kunal30031998/Portfolio",
+  "homepage": "https://portfolio.kunal-gautam-570.workers.dev/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "lucide-react": "^0.441.0",

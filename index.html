@@ -3,6 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#020408" />
+
+    <!-- Inline SVG favicon — zero extra request, zero 404 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020408'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='system-ui,sans-serif' font-size='34' font-weight='700' fill='%2364ffda'%3EK%3C/text%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020408'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='system-ui,sans-serif' font-size='34' font-weight='700' fill='%2364ffda'%3EK%3C/text%3E%3C/svg%3E" />
+
+    <!-- Reduce DNS round-trips for CDN scripts -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
     <meta name="google-site-verification" content="jETIVA8LqZl-tPzd2VHN01qqrJwaaWFwr81IxXFnMVo" />
     <!-- ═══════════════════════════════════════════════════
          PRIMARY SEO
@@ -21,7 +32,8 @@
     <meta property="og:url"         content="https://portfolio.kunal-gautam-570.workers.dev/" />
     <meta property="og:title"       content="Kunal Gautam — Full Stack Software Engineer" />
     <meta property="og:description" content="6+ years shipping cloud-native web apps. React · TypeScript · Node.js · AWS · GCP." />
-    <meta property="og:image"       content="https://portfolio.kunal-gautam-570.workers.dev/og-image.png" />
+    <meta property="og:image"       content="https://portfolio.kunal-gautam-570.workers.dev/og-image.svg" />
+    <meta property="og:image:type"   content="image/svg+xml" />
     <meta property="og:image:width"  content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale"      content="en_IN" />
@@ -34,7 +46,7 @@
     <meta name="twitter:url"         content="https://portfolio.kunal-gautam-570.workers.dev/" />
     <meta name="twitter:title"       content="Kunal Gautam — Full Stack Software Engineer" />
     <meta name="twitter:description" content="6+ years shipping cloud-native web apps. React · TypeScript · Node.js · AWS · GCP." />
-    <meta name="twitter:image"       content="https://portfolio.kunal-gautam-570.workers.dev/og-image.png" />
+    <meta name="twitter:image"       content="https://portfolio.kunal-gautam-570.workers.dev/og-image.svg" />
 
     <!-- ═══════════════════════════════════════════════════
          STRUCTURED DATA — Person (Google Rich Results)
@@ -81,7 +93,6 @@
       });
     </script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>html,body,#root{margin:0;padding:0;background:#020408;color:#e8edf5;overflow-x:hidden}</style>
   </head>
   <body>

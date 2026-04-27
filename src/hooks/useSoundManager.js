@@ -18,32 +18,48 @@ export function useSoundManager({ ready, soundOn, threeRef }) {
   const audioRef  = useRef(null);
   const soundRef2 = useRef(soundOn); // sync mirror — avoids stale closure in gesture handler
 
-  /* ---- Ambient sound: HTML audio element ---- */
+  /* ---- Ambient sound: HTML audio element ----
+     PERF: The mp3 is ~13MB. We DO NOT instantiate or fetch it until the user
+     produces a real interaction gesture, AND we set preload="none" so the
+     browser never speculatively downloads the file. This alone saves ~13MB
+     of bandwidth per bounced visit. */
   useEffect(() => {
-    const audio = new Audio('/deepState.mp3');
-    audio.loop = true;
-    audio.volume = 0.7;
-    audio.crossOrigin = 'anonymous'; // required for Web Audio API AnalyserNode
-    audioRef.current = audio;
-    window._portfolioAudio = audio;
-
+    let audio = null;
     let started = false;
-    // Only click / keydown / touch / pointerdown are valid autoplay gestures in all browsers
     const GESTURES = ['click', 'keydown', 'touchstart', 'pointerdown'];
+
+    const ensureAudio = () => {
+      if (audio) return audio;
+      audio = new Audio();
+      audio.preload = 'none';            // never pre-fetch
+      audio.loop = true;
+      audio.volume = 0.7;
+      audio.crossOrigin = 'anonymous';   // for Web Audio API AnalyserNode
+      audio.src = '/deepState.mp3';      // assigning src triggers nothing while preload=none
+      audioRef.current = audio;
+      window._portfolioAudio = audio;
+      return audio;
+    };
+
     const tryPlay = () => {
       if (started) return;
       started = true;
       GESTURES.forEach(e => window.removeEventListener(e, tryPlay));
-      audio.muted = !soundRef2.current; // respect current mute toggle state
-      audio.play().catch(() => { started = false; });
+      // If user has sound off, do not fetch the mp3 at all.
+      if (!soundRef2.current) return;
+      const a = ensureAudio();
+      a.muted = false;
+      a.play().catch(() => { started = false; });
     };
     GESTURES.forEach(e => window.addEventListener(e, tryPlay, { passive: true }));
 
     return () => {
       GESTURES.forEach(e => window.removeEventListener(e, tryPlay));
-      audio.pause();
-      audio.src = '';
-      audioRef.current = null;
+      if (audio) {
+        audio.pause();
+        audio.src = '';
+        audioRef.current = null;
+      }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
