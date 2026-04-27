@@ -74,22 +74,22 @@ function ProjectCard({ p, index, onHoverCard, onUnhover, onHoverBtn, onOpen }) {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 14 }}>
-        <button
-          type="button"
+        <a
+          href={`/projects/${p.id}`}
           onMouseEnter={onHoverBtn}
           onMouseLeave={onUnhover}
-          onClick={(e) => { e.stopPropagation(); onOpen?.(p); }}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpen?.(p); }}
           className="skeuo-btn warp font-mono"
           style={{
             padding: '9px 14px', borderRadius: 999, cursor: 'none',
             color: 'var(--warp)',
             letterSpacing: '0.2em', fontSize: 10.5, textTransform: 'uppercase',
-            display: 'inline-flex', alignItems: 'center', gap: 8,
+            display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none',
           }}
         >
           Warp In
           <ArrowUpRight size={13} strokeWidth={1.8} />
-        </button>
+        </a>
       </div>
     </div>
   );

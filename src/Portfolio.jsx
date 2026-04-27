@@ -80,6 +80,8 @@ export default function Portfolio() {
   const [isOffline,   setIsOffline]   = useState(false);
   const [lockedPlanetIdx, setLockedPlanetIdx] = useState(-1); // atmospheric haze
 
+  const applyingRouteRef = useRef(false);
+
   /* ── Dirty-lens overlay (generated once, stays stable) ──────────────── */
   const lensTexture = React.useMemo(() => {
     try {
@@ -341,6 +343,12 @@ export default function Portfolio() {
     _activateOrbitLock(orbIdx, 1.0);
     setLockedPlanetIdx(orbIdx);
     try { threeRef.current.lenis?.stop?.(); lenisStoppedRef.current = true; } catch (_) {}
+    if (!applyingRouteRef.current) {
+      const nextPath = `/projects/${p.id}`;
+      if (window.location.pathname !== nextPath) {
+        window.history.pushState({ kind: 'project', id: p.id }, '', nextPath);
+      }
+    }
     setDetail({ kind: 'project', item: p, planetIdx: loreIdx });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -352,8 +360,56 @@ export default function Portfolio() {
     _activateOrbitLock(orbIdx, 4.0);
     setLockedPlanetIdx(orbIdx);
     try { threeRef.current.lenis?.stop?.(); lenisStoppedRef.current = true; } catch (_) {}
+    if (!applyingRouteRef.current) {
+      const nextPath = `/experience/${e.id}`;
+      if (window.location.pathname !== nextPath) {
+        window.history.pushState({ kind: 'experience', id: e.id }, '', nextPath);
+      }
+    }
     setDetail({ kind: 'experience', item: e, planetIdx: loreIdx });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* ── URL route hydration (supports direct links + browser back) ───────── */
+  useEffect(() => {
+    const applyRoute = () => {
+      const pathname = window.location.pathname.replace(/\/+$/, '') || '/';
+      const params = new URLSearchParams(window.location.search);
+      applyingRouteRef.current = true;
+      try {
+        const projectFromQuery = params.get('project');
+        if (projectFromQuery) {
+          const p = PROJECTS.find((it) => it.id === projectFromQuery);
+          if (p) openProject(p);
+          return;
+        }
+        const experienceFromQuery = params.get('experience');
+        if (experienceFromQuery) {
+          const e = EXPERIENCE.find((it) => it.id === experienceFromQuery);
+          if (e) openExperience(e);
+          return;
+        }
+
+        if (pathname.startsWith('/projects/')) {
+          const id = pathname.split('/')[2];
+          const p = PROJECTS.find((it) => it.id === id);
+          if (p) openProject(p);
+          return;
+        }
+        if (pathname.startsWith('/experience/')) {
+          const id = pathname.split('/')[2];
+          const e = EXPERIENCE.find((it) => it.id === id);
+          if (e) openExperience(e);
+          return;
+        }
+      } finally {
+        applyingRouteRef.current = false;
+      }
+    };
+
+    applyRoute();
+    window.addEventListener('popstate', applyRoute);
+    return () => window.removeEventListener('popstate', applyRoute);
+  }, [openProject, openExperience]);
 
   /* ── Detail overlay — close (two-phase: release lock → unmount) ──────── */
   const releaseOrbitLock = useCallback(() => {
@@ -368,6 +424,14 @@ export default function Portfolio() {
       if ((threeRef.current.orbitLock?.prog ?? 0) <= 0) {
         setSectionsRevealing(true);
         setDetail(null);
+        if (
+          window.location.pathname.startsWith('/projects/') ||
+          window.location.pathname.startsWith('/experience/') ||
+          window.location.search.includes('project=') ||
+          window.location.search.includes('experience=')
+        ) {
+          window.history.replaceState({}, '', '/');
+        }
         _dismissTmoRef.current = setTimeout(() => setSectionsRevealing(false), 480);
       } else {
         _dismissRafRef.current = requestAnimationFrame(poll);

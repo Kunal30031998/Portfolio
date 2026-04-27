@@ -59,11 +59,11 @@ function ExperienceCard({ n, i, inView, onOpenExperience, onHoverBtn, onUnhover 
       <div style={{ color: 'var(--text-dim)', fontSize: 13, lineHeight: 1.65 }}>{n.body}</div>
 
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
-        <button
-          type="button"
+        <a
+          href={`/experience/${n.id}`}
           onMouseEnter={onHoverBtn}
           onMouseLeave={(e) => { e.stopPropagation(); onUnhover?.(); }}
-          onClick={(e) => { e.stopPropagation(); onOpenExperience?.(n); }}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpenExperience?.(n); }}
           className="skeuo-btn warp font-mono"
           style={{
             padding: '8px 12px',
@@ -76,11 +76,12 @@ function ExperienceCard({ n, i, inView, onOpenExperience, onHoverBtn, onUnhover 
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
+            textDecoration: 'none',
           }}
         >
           Warp In
           <ArrowUpRight size={13} strokeWidth={1.8} />
-        </button>
+        </a>
       </div>
     </div>
   );
