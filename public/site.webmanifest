@@ -1,0 +1,21 @@
+{
+  "name": "Kunal Gautam Portfolio",
+  "short_name": "Kunal Portfolio",
+  "description": "Portfolio of Kunal Gautam, Full Stack Software Engineer",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020408",
+  "theme_color": "#020408",
+  "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    }
+  ]
+}
