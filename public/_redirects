@@ -1,3 +1,0 @@
-# Cloudflare Pages SPA fallback — every unknown path serves index.html (200)
-# This eliminates 404s on direct-link deep routes.
-/*    /index.html   200
