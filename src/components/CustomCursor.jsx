@@ -7,6 +7,8 @@ export function CustomCursor({ mode, color }) {
   const dotRef = useRef(null);
   const ringRef = useRef(null);
   const pos = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
+  // Track current scale so the RAF loop can include it in transform (avoids overwriting CSS transition)
+  const scaleRef = useRef(0.6);
 
   useEffect(() => {
     const move = (e) => {
@@ -22,7 +24,8 @@ export function CustomCursor({ mode, color }) {
       pos.current.x += (pos.current.tx - pos.current.x) * 0.12;
       pos.current.y += (pos.current.ty - pos.current.y) * 0.12;
       if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${pos.current.x - 15}px, ${pos.current.y - 15}px, 0)`;
+        // Offset is half of fixed 50px ring size; scale is composited via CSS transition
+        ringRef.current.style.transform = `translate3d(${pos.current.x - 25}px, ${pos.current.y - 25}px, 0) scale(${scaleRef.current})`;
       }
       raf = requestAnimationFrame(loop);
     };
@@ -30,7 +33,10 @@ export function CustomCursor({ mode, color }) {
     return () => { window.removeEventListener('mousemove', move); cancelAnimationFrame(raf); };
   }, []);
 
-  const ringSize = mode === 'button' ? 50 : 30;
+  // Ring is always 50×50px; scale drives the apparent size (30px=0.6×, 50px=1×).
+  // This keeps width/height constant — no layout-triggering transitions.
+  const ringScale = mode === 'button' ? 1 : 0.6;
+  scaleRef.current = ringScale;
   const ringRadius = mode === 'card' ? '12px' : '50%';
   const ringBg = mode === 'button' ? 'rgba(143,216,232,0.22)' : 'transparent';
   const borderColor = color || 'var(--accent)';
@@ -42,9 +48,9 @@ export function CustomCursor({ mode, color }) {
         pointerEvents:'none',zIndex:2147483647,top:0,left:0,mixBlendMode:'screen'
       }}/>
       <div ref={ringRef} style={{
-        position:'fixed',width:ringSize,height:ringSize,border:`1.5px solid ${borderColor}`,
+        position:'fixed',width:50,height:50,border:`1.5px solid ${borderColor}`,
         borderRadius:ringRadius,background:ringBg,pointerEvents:'none',zIndex:2147483646,top:0,left:0,
-        transition:'width .25s, height .25s, border-radius .25s, background .25s, border-color .25s'
+        transition:'transform .25s, border-radius .25s, background .25s, border-color .25s'
       }}/>
     </>
   );

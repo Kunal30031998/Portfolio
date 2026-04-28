@@ -13,18 +13,28 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020408'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='system-ui,sans-serif' font-size='34' font-weight='700' fill='%2364ffda'%3EK%3C/text%3E%3C/svg%3E" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Reduce DNS round-trips for CDN scripts -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <!-- Three.js/GSAP/Lenis are now bundled locally — no CDN preconnects needed -->
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+    <!-- Fonts — non-blocking: preloaded as style, applied on onload.
+         Falls back via <noscript> for no-JS environments.
+         preconnect to gstatic resolves DNS+TLS before the CSS response arrives. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style"
+          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap"
+          onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" />
+    </noscript>
 
     <meta name="google-site-verification" content="jETIVA8LqZl-tPzd2VHN01qqrJwaaWFwr81IxXFnMVo" />
     <!-- ═══════════════════════════════════════════════════
          PRIMARY SEO
     ════════════════════════════════════════════════════ -->
-    <title>Kunal Gautam — Full Stack Software Engineer | React, Node.js, AWS</title>
-    <meta name="description" content="Portfolio of Kunal Gautam — Full Stack Software Engineer with 6+ years building cloud-native, high-traffic web apps using React, TypeScript, Node.js, Java, AWS and GCP." />
-    <meta name="keywords" content="Kunal Gautam, Full Stack Engineer, React Developer, Node.js, TypeScript, AWS, GCP, Software Engineer, Portfolio, Gurugram, India, Hashedin, Deloitte" />
+    <title>Kunal Gautam — Senior Frontend Engineer | React, TypeScript, Full Stack</title>
+    <meta name="description" content="Portfolio of Kunal Gautam — Senior Frontend Engineer with 6+ years. React and TypeScript specialist with full-stack delivery experience. Shipped for 50,000+ concurrent users at Hashedin by Deloitte." />
+    <meta name="keywords" content="Kunal Gautam, Senior Frontend Engineer, React Developer, TypeScript, Node.js, Full Stack Engineer, Performance Optimization, Design Systems, AWS, GCP, Software Engineer, Portfolio, Gurugram, India, Hashedin, Deloitte" />
     <meta name="author" content="Kunal Gautam" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://portfolio.kunal-gautam-570.workers.dev/" />
@@ -34,8 +44,8 @@
     ════════════════════════════════════════════════════ -->
     <meta property="og:type"        content="website" />
     <meta property="og:url"         content="https://portfolio.kunal-gautam-570.workers.dev/" />
-    <meta property="og:title"       content="Kunal Gautam — Full Stack Software Engineer" />
-    <meta property="og:description" content="6+ years shipping cloud-native web apps. React · TypeScript · Node.js · AWS · GCP." />
+    <meta property="og:title"       content="Kunal Gautam — Senior Frontend Engineer" />
+    <meta property="og:description" content="React · TypeScript · 6+ years · 50K+ concurrent users. Frontend-first, full-stack context." />
     <meta property="og:image"       content="https://portfolio.kunal-gautam-570.workers.dev/og-image.svg" />
     <meta property="og:image:type"   content="image/svg+xml" />
     <meta property="og:image:width"  content="1200" />

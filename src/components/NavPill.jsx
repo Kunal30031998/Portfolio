@@ -54,7 +54,7 @@ export function NavPill({ onHoverBtn, onUnhover, scrollTo, activeId, hide, detai
         zIndex: 50,
         opacity: hide ? 0 : (hidden ? 0 : 1),
         pointerEvents: (hide || hidden) ? 'none' : 'auto',
-        transition: 'opacity 300ms ease, transform 300ms ease, left 300ms ease, right 300ms ease',
+        transition: 'opacity 300ms ease, transform 300ms ease',
         maxWidth: detailOpen ? 'calc(50% - 20px)' : 'min(1080px, calc(100vw - 20px))',
         marginRight: detailOpen ? 18 : 'auto',
       }}
@@ -67,13 +67,12 @@ export function NavPill({ onHoverBtn, onUnhover, scrollTo, activeId, hide, detai
           alignItems: 'center',
           gap: 4,
           padding: '6px 8px',
-          backdropFilter: `blur(${blur}px) saturate(130%)`,
-          WebkitBackdropFilter: `blur(${blur}px) saturate(130%)`,
           border: '1px solid rgba(167,231,243,0.24)',
           borderRadius: 999,
           overflowX: 'auto',
           overflowY: 'hidden',
           WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'none',
         }}
       >
         {/* Monogram */}
@@ -90,17 +89,17 @@ export function NavPill({ onHoverBtn, onUnhover, scrollTo, activeId, hide, detai
           <span className="orbital" aria-hidden="true" />
           <span
             style={{
-              color: 'var(--text)',
+              color: '#ffffff',
               letterSpacing: '0.26em',
               textTransform: 'uppercase',
-              fontSize: 11,
-              fontWeight: 600,
+              fontSize: 12,
+              fontWeight: 800,
             }}
           >
             KUNAL
           </span>
           <span
-            className="font-mono"
+            className="font-mono nav-hide-mobile"
             style={{
               color: 'var(--accent)',
               letterSpacing: '0.22em',
@@ -123,16 +122,16 @@ export function NavPill({ onHoverBtn, onUnhover, scrollTo, activeId, hide, detai
               onClick={() => scrollTo(it.id)}
               onMouseEnter={() => { setHoverIdx(i); onHoverBtn && onHoverBtn(); }}
               onMouseLeave={() => { setHoverIdx(null); onUnhover && onUnhover(); }}
-              className="font-display"
+              className="font-display nav-pill-item"
               style={{
                 position: 'relative',
                 padding: '10px 16px',
                 border: 0,
-                background: active ? 'rgba(167,231,243,0.10)' : 'transparent',
-                color: active ? 'var(--accent-bright)' : 'var(--text)',
-                fontSize: 11,
-                fontWeight: 500,
-                letterSpacing: '0.22em',
+                background: active ? 'rgba(167,231,243,0.18)' : 'transparent',
+                color: active ? 'var(--accent-bright)' : '#ffffff',
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: '0.18em',
                 textTransform: 'uppercase',
                 borderRadius: 999,
                 cursor: 'none',
@@ -162,11 +161,11 @@ export function NavPill({ onHoverBtn, onUnhover, scrollTo, activeId, hide, detai
           );
         })}
 
-        <span style={{ width: 1, height: 18, background: 'rgba(167,231,243,0.18)', margin: '0 4px 0 2px' }} />
+        <span className="nav-hide-mobile" style={{ width: 1, height: 18, background: 'rgba(167,231,243,0.18)', margin: '0 4px 0 2px' }} />
 
         {/* Right-side status */}
         <div
-          className="font-mono"
+          className="font-mono nav-hide-mobile"
           style={{
             display: 'inline-flex',
             alignItems: 'center',

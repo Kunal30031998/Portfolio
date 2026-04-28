@@ -1,12 +1,11 @@
-import React from 'react';
+// CSS has been migrated to src/global.css and is imported in main.jsx.
+// This file is kept only for any lingering named imports and is safe to delete.
+export const GlobalStyle = () => null;
 
-/* ---------------------------------------------------------------------------
-   Global CSS — ActiveTheory-inspired cinematic system. Every surface is a
-   translucent glass rail so the WebGL galaxy stays the hero.
-   --------------------------------------------------------------------------- */
-export const GlobalStyle = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+/*
+
+    /* Fonts loaded via <link> in index.html for earlier browser discovery.
+       This style tag handles all layout/component CSS only. */
 
     :root{
       --bg:#020309;
@@ -356,6 +355,11 @@ export const GlobalStyle = () => (
       position:relative;
       padding: min(18vh, 160px) 5vw;
       scroll-margin-top: 80px;
+      /* Skip layout/paint for off-screen sections — the browser estimates a
+         placeholder height from contain-intrinsic-size and skips all rendering
+         work until the section enters (or is near) the viewport. */
+      content-visibility: auto;
+      contain-intrinsic-size: 0 100vh;
     }
     .section-shell.tall{ min-height: 100vh; }
     .section-inner{
@@ -618,5 +622,49 @@ export const GlobalStyle = () => (
       transform-origin: 2px 6px;
     }
     @keyframes orbitalSpin { to { transform: rotate(360deg); } }
+
+    /* ============ MOBILE ============ */
+    @media (max-width: 768px) {
+      /* Reduce section vertical breathing room */
+      .section-shell { padding: 70px 5vw 50px; }
+
+      /* Hero text fills the screen — 3D scene stays behind */
+      .hero-content { max-width: 92vw !important; }
+
+      /* Hide custom scrollbar — mobile uses native momentum scroll */
+      ::-webkit-scrollbar { width: 0 !important; background: transparent; }
+      html { scrollbar-width: none; }
+
+      /* Nav pill — drop decorative labels to give links room */
+      .nav-hide-mobile { display: none !important; }
+      /* Tighter nav items on small screens */
+      .nav-pill-item { padding: 8px 10px !important; }
+
+      /* Chat launcher — lift above OS gesture bar */
+      .chat-launcher-btn { bottom: 72px !important; right: 16px !important; }
+
+      /* Chat panel — full-width drawer from bottom */
+      .chat-open-panel {
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        top: auto !important;
+        width: 100% !important;
+        height: min(520px, 85vh) !important;
+        border-radius: 16px 16px 0 0 !important;
+        border-bottom: 0 !important;
+      }
+
+      /* Detail page dock — tighter on small screens */
+      .detail-dock { top: 8px; left: 8px; right: 8px; }
+    }
+
+    /* Touch devices — disable mouse-only effects */
+    @media (hover: none) {
+      /* Holo shimmer requires mousemove — pointless on touch */
+      .holo-card::after { display: none !important; }
+      /* Restore native cursors on touch */
+      button, a { cursor: auto !important; }
+    }
   `}</style>
 );

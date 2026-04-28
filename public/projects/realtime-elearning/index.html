@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Real-Time E-Learning | Project Case Study | Kunal Gautam</title>
-    <meta name="description" content="Latency-sensitive UI patterns for truly live sessions." />
+    <title>Real-Time E-Learning Platform | Project Case Study | Kunal Gautam</title>
+    <meta name="description" content="2–4s teacher-to-student latency → &lt;100ms. 18K lines refactored, zero regressions." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://portfolio.kunal-gautam-570.workers.dev/projects/realtime-elearning/" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Real-Time E-Learning | Project Case Study | Kunal Gautam" />
-    <meta property="og:description" content="Latency-sensitive UI patterns for truly live sessions." />
+    <meta property="og:title" content="Real-Time E-Learning Platform | Project Case Study | Kunal Gautam" />
+    <meta property="og:description" content="2–4s teacher-to-student latency → &lt;100ms. 18K lines refactored, zero regressions." />
     <meta property="og:url" content="https://portfolio.kunal-gautam-570.workers.dev/projects/realtime-elearning/" />
     <meta property="og:image" content="https://portfolio.kunal-gautam-570.workers.dev/og-image.svg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Real-Time E-Learning | Project Case Study | Kunal Gautam" />
-    <meta name="twitter:description" content="Latency-sensitive UI patterns for truly live sessions." />
+    <meta name="twitter:title" content="Real-Time E-Learning Platform | Project Case Study | Kunal Gautam" />
+    <meta name="twitter:description" content="2–4s teacher-to-student latency → &lt;100ms. 18K lines refactored, zero regressions." />
     <meta name="twitter:image" content="https://portfolio.kunal-gautam-570.workers.dev/og-image.svg" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Real-Time E-Learning | Project Case Study | Kunal Gautam","description":"Latency-sensitive UI patterns for truly live sessions.","url":"https://portfolio.kunal-gautam-570.workers.dev/projects/realtime-elearning/","author":{"@type":"Person","name":"Kunal Gautam","url":"https://portfolio.kunal-gautam-570.workers.dev","sameAs":["https://github.com/Kunal30031998","https://www.linkedin.com/in/kgotham/"]}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"Real-Time E-Learning Platform | Project Case Study | Kunal Gautam","description":"2–4s teacher-to-student latency → <100ms. 18K lines refactored, zero regressions.","url":"https://portfolio.kunal-gautam-570.workers.dev/projects/realtime-elearning/","author":{"@type":"Person","name":"Kunal Gautam","url":"https://portfolio.kunal-gautam-570.workers.dev","sameAs":["https://github.com/Kunal30031998","https://www.linkedin.com/in/kgotham/"]}}</script>
     <style>
       :root { color-scheme: dark; }
       html, body {
@@ -56,13 +56,13 @@
   </head>
   <body>
     <main class="wrap">
-      <h1>Real-Time E-Learning</h1>
-      <p class="sub">Latency-sensitive UI patterns for truly live sessions.</p>
+      <h1>Real-Time E-Learning Platform</h1>
+      <p class="sub">2–4s teacher-to-student latency → &lt;100ms. 18K lines refactored, zero regressions.</p>
       <div class="chips"><span class="chip">React</span><span class="chip">WebSockets</span><span class="chip">Redux</span><span class="chip">Firebase</span></div>
-      <p>Integrated WebSocket-driven classroom features — teacher-student interaction, polling, Q&amp;A — into an e-learning platform serving thousands of concurrent students. Refactored legacy React to Hooks + Context.</p>
-<p>a live classroom needed to feel live</p>
+      <p>Rebuilt the real-time interaction layer using Socket.io with Redis pub/sub for horizontal scaling across 3 Node.js instances. Optimistic UI on the client reduced perceived latency from 2–4s to near-instant. Migrated 18,000 lines of legacy class components to Hooks + Context without a single production regression.</p>
+<p>teacher actions took 2–4s to reflect for students — classrooms felt broken</p>
       <h2>Highlights</h2>
-      <ul><li>Real-time features with predictable state updates and resiliency to reconnects.</li><li>Refactor plan: legacy code → hooks + composable state containers.</li><li>UX polish for &#39;it feels live&#39;: optimistic updates and fast feedback loops.</li></ul>
+      <ul><li>Socket.io client with exponential backoff reconnection and event queue: events emitted while disconnected are replayed on reconnect — students don&#39;t miss actions during WiFi drops.</li><li>Optimistic UI state machine: student clicks &#39;raise hand&#39; → local state updates immediately → server ACK arrives in ~80ms → reconcile. Mismatch triggers a subtle correction animation, never a jarring reset.</li><li>Redis pub/sub across 3 Socket.io server instances: teacher broadcasts to Room X → Redis channel → all servers subscribed to that room deliver to connected students regardless of which instance they hit.</li><li>Legacy refactor strategy: strangler fig pattern — new Hooks implementation behind a feature flag, run in parallel with old class component, compare output, then cut over one component at a time.</li><li>useReducer + Context replaced a 12-reducer Redux store for session state — bundle shrank by 28KB, state transitions became auditable with a single dispatch log.</li></ul>
       <a class="cta" href="/?project=realtime-elearning">Open Interactive Portfolio View</a>
       <p style="margin-top:26px; color:#90a2bd;">See full portfolio: <a href="https://portfolio.kunal-gautam-570.workers.dev/">https://portfolio.kunal-gautam-570.workers.dev</a></p>
     </main>

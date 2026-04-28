@@ -110,10 +110,28 @@ export function ParticleMorphText({ targetRef, onDone }) {
         ty: t.ty,
         vx: (Math.random() - 0.5) * 0.5,
         vy: (Math.random() - 0.5) * 0.5,
-        alpha: 0,
         size:  0.75 + Math.random() * 1.25,
       };
     });
+
+    // Pre-group particles into hue buckets so we can batch-draw with one fill() per bucket
+    // instead of one fill() per particle. Hue is fixed (depends only on target x, which never changes).
+    // This reduces Canvas API calls from ~5N/frame to ~(3K + N)/frame where K = bucket count.
+    const HUE_BUCKETS = 32;
+    const bucketMap = new Map();
+    for (const p of particles) {
+      const hue = 185 + ((p.tx - rect.left) / (rect.width || 1)) * 80;
+      const idx  = Math.min(HUE_BUCKETS - 1, Math.floor(((hue - 185) / 80) * HUE_BUCKETS));
+      if (!bucketMap.has(idx)) {
+        bucketMap.set(idx, { hue: Math.round(185 + (idx + 0.5) / HUE_BUCKETS * 80), list: [] });
+      }
+      bucketMap.get(idx).list.push(p);
+    }
+    const activeBuckets = [...bucketMap.values()];
+
+    // All particles fade in at the same rate (+0.028/frame), so one frameAlpha
+    // replaces per-particle alpha tracking — allows a single ctx.globalAlpha per frame.
+    let frameAlpha = 0;
 
     const MORPH_MS  = 1700; // assembly duration
     const HOLD_MS   = 300;  // hold fully assembled
@@ -136,26 +154,34 @@ export function ParticleMorphText({ targetRef, onDone }) {
       // Easing: ease-out-cubic
       const rawT = Math.min(1, elapsed / MORPH_MS);
       const ease = 1 - Math.pow(1 - rawT, 3);
+      const lit  = Math.round(68 + ease * 8); // brightens as particles arrive
 
+      // Single globalAlpha for all particles (all ramp at the same rate)
+      frameAlpha = Math.min(1, frameAlpha + 0.028);
+      ctx.globalAlpha = frameAlpha * canvasFade;
+
+      // Update physics for every particle
       for (const p of particles) {
-        // Spring-like lerp toward target
         const dx = p.tx - p.x;
         const dy = p.ty - p.y;
         p.vx = p.vx * 0.82 + dx * 0.06;
         p.vy = p.vy * 0.82 + dy * 0.06;
         p.x += p.vx;
         p.y += p.vy;
-        p.alpha = Math.min(1, p.alpha + 0.028);
+      }
 
-        // Hue: cyan on the left → warp purple on the right
-        const hue = 185 + ((p.tx - rect.left) / (rect.width || 1)) * 80;
-        const lit = 68 + ease * 8; // brighten as they arrive
-        ctx.globalAlpha = p.alpha * canvasFade;
-        ctx.fillStyle = `hsl(${hue},90%,${lit}%)`;
+      // Batch draw: one beginPath + N arcs + one fill per hue bucket.
+      // Reduces fill() calls from ~N (per particle) to ~K (per bucket, K ≤ 32).
+      for (const bucket of activeBuckets) {
+        ctx.fillStyle = `hsl(${bucket.hue},90%,${lit}%)`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        for (const p of bucket.list) {
+          ctx.moveTo(p.x + p.size, p.y); // new subpath avoids connecting lines
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        }
         ctx.fill();
       }
+
       ctx.globalAlpha = 1;
 
       if (elapsed >= MORPH_MS + HOLD_MS && !doneFired) {

@@ -105,7 +105,7 @@ export function Experience({ onOpenExperience, onHoverBtn, onUnhover, scrollTo }
             <div style={{
               position: 'absolute', left: 12, top: 0, width: 2,
               background: 'linear-gradient(to bottom, var(--accent), rgba(167,231,243,0.18))',
-              height: inView ? '100%' : '0%', transition: 'height 1.6s ease-out'
+              height: '100%', transformOrigin: 'top', transform: inView ? 'scaleY(1)' : 'scaleY(0)', transition: 'transform 1.6s ease-out'
             }} />
 
             {EXPERIENCE.map((n, i) => (

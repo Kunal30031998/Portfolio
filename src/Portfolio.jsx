@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { CDN, loadScript, PROJECTS, EXPERIENCE } from './data/content';
+import React, { useEffect, useRef, useState, useCallback, Suspense, lazy } from 'react';
+import { PROJECTS, EXPERIENCE } from './data/content';
 import { PLANET_LORE } from './data/planetLore';
 
 // Scene
@@ -8,30 +8,33 @@ import { useThreeScene }   from './scene/useThreeScene.jsx';
 // Hooks
 import { useSoundManager } from './hooks/useSoundManager';
 
-// Layout components
-import { GlobalStyle }     from './components/GlobalStyle';
+// Layout components — always needed at first paint
+// GlobalStyle removed — CSS lives in src/global.css (imported in main.jsx)
 import { CustomCursor }    from './components/CustomCursor';
 import { LoadingScreen }   from './components/LoadingScreen';
 import { NavPill }         from './components/NavPill';
-import { ChatWidget }      from './components/ChatWidget';
-import { AudioVisualizer } from './components/AudioVisualizer';
-import { AstronautHUD }    from './components/AstronautHUD';
-import { DetailPage }      from './components/DetailPage';
-import { SourceViewer }    from './components/SourceViewer';
-import { KeyboardHelp }    from './components/KeyboardHelp';
 import { SoundToggle }     from './components/SoundToggle';
 import { AtmosphericHaze } from './components/AtmosphericHaze';
 import { OfflineBanner }   from './components/OfflineBanner';
 
-// Sections
-import { Hero }       from './sections/Hero';
-import { About }      from './sections/About';
-import { Projects }   from './sections/Projects';
-import { Skills }     from './sections/Skills';
-import { Experience } from './sections/Experience';
-import { Terminal }   from './sections/Terminal';
-import { Contact }    from './sections/Contact';
-import { Footer }     from './sections/Footer';
+// Above-fold section — eager
+import { Hero } from './sections/Hero';
+
+// Below-fold sections — lazy loaded, split into their own chunks
+const About      = lazy(() => import('./sections/About').then(m => ({ default: m.About })));
+const Projects   = lazy(() => import('./sections/Projects').then(m => ({ default: m.Projects })));
+const Skills     = lazy(() => import('./sections/Skills').then(m => ({ default: m.Skills })));
+const Experience = lazy(() => import('./sections/Experience').then(m => ({ default: m.Experience })));
+const Terminal   = lazy(() => import('./sections/Terminal').then(m => ({ default: m.Terminal })));
+const Contact    = lazy(() => import('./sections/Contact').then(m => ({ default: m.Contact })));
+const Footer     = lazy(() => import('./sections/Footer').then(m => ({ default: m.Footer })));
+
+// Conditional overlays — only fetched when first needed
+const ChatWidget     = lazy(() => import('./components/ChatWidget').then(m => ({ default: m.ChatWidget })));
+const AudioVisualizer= lazy(() => import('./components/AudioVisualizer').then(m => ({ default: m.AudioVisualizer })));
+const DetailPage     = lazy(() => import('./components/DetailPage').then(m => ({ default: m.DetailPage })));
+const SourceViewer   = lazy(() => import('./components/SourceViewer').then(m => ({ default: m.SourceViewer })));
+
 
 /* =========================================================================
    Portfolio — top-level orchestrator.
@@ -55,16 +58,16 @@ export default function Portfolio() {
   const sectionsWrapRef  = useRef(null);  // CSS 3D perspective wrapper
   const mouseLastMoveRef = useRef(null);  // timestamp of last pointer activity
   const pausedRef        = useRef(false); // mirrors `paused` for RAF loop (no re-render cost)
-  const autoScrollRef    = useRef(true);  // RAF loop auto-scroll flag
+  const autoScrollRef    = useRef(false); // auto-scroll disabled
   const lenisStoppedRef  = useRef(false); // true while detail overlay is open
   const _dismissRafRef   = useRef(null);  // detail-dismiss poll RAF id
   const _dismissTmoRef   = useRef(null);  // detail-dismiss settle timeout id
   const audioRef         = useRef(null);  // HTMLAudioElement (ambient track)
 
-  /* ── Loading state ───────────────────────────────────────────────────── */
-  const [progress,   setProgress]   = useState(0);
-  const [ready,      setReady]      = useState(false);   // CDN scripts loaded
-  const [sceneReady, setSceneReady] = useState(false);   // GPU shaders compiled
+  /* ── Loading state — CDN scripts are now bundled, so ready immediately ── */
+  const [progress,   setProgress]   = useState(100);
+  const [ready,      setReady]      = useState(true);   // always ready: libs are bundled
+  const [sceneReady, setSceneReady] = useState(false);  // waits for WebGL shader compilation
 
   /* ── UI state ────────────────────────────────────────────────────────── */
   const [cursorMode,  setCursorMode]  = useState('default');
@@ -73,39 +76,51 @@ export default function Portfolio() {
   const [activeId,    setActiveId]    = useState('hero');
   const [detail,      setDetail]      = useState(null);  // { kind, item, planetIdx }
   const [sectionsRevealing, setSectionsRevealing] = useState(false);
-  const [showKeyboardHelp,  setShowKeyboardHelp]  = useState(false);
+
   const [showSourceViewer,  setShowSourceViewer]  = useState(false);
   const [paused,      setPaused]      = useState(false);
   const [soundOn,     setSoundOn]     = useState(true);
   const [isOffline,   setIsOffline]   = useState(false);
   const [lockedPlanetIdx, setLockedPlanetIdx] = useState(-1); // atmospheric haze
 
+  /* Detect mobile once — stable across renders */
+  const isMobile = React.useRef(
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches
+  ).current;
+
   const applyingRouteRef = useRef(false);
 
-  /* ── Dirty-lens overlay (generated once, stays stable) ──────────────── */
-  const lensTexture = React.useMemo(() => {
-    try {
-      const c = document.createElement('canvas'); c.width = c.height = 512;
-      const ctx = c.getContext('2d');
-      ctx.clearRect(0, 0, 512, 512);
-      for (let i = 0; i < 14; i++) {
-        const x = Math.random() * 512, y = Math.random() * 512,
-              r = 20 + Math.random() * 80, a = 0.015 + Math.random() * 0.04;
-        const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-        g.addColorStop(0, `rgba(255,255,255,${a})`);
-        g.addColorStop(0.4, `rgba(255,255,255,${a * 0.5})`);
-        g.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
-      }
-      for (let i = 0; i < 5; i++) {
-        const x1 = Math.random() * 512, y1 = Math.random() * 512,
-              x2 = x1 + (Math.random() - 0.5) * 200, y2 = y1 + (Math.random() - 0.5) * 200;
-        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
-        ctx.strokeStyle = `rgba(255,255,255,${0.02 + Math.random() * 0.03})`;
-        ctx.lineWidth = 0.5 + Math.random(); ctx.stroke();
-      }
-      return c.toDataURL();
-    } catch (_e) { return null; }
+  /* ── Dirty-lens overlay — generated off the critical path ──────────── */
+  const [lensTexture, setLensTexture] = React.useState(null);
+  React.useEffect(() => {
+    // Defer to browser idle time so this 150ms canvas op never blocks LCP.
+    const generate = () => {
+      try {
+        const c = document.createElement('canvas'); c.width = c.height = 512;
+        const ctx = c.getContext('2d');
+        ctx.clearRect(0, 0, 512, 512);
+        for (let i = 0; i < 14; i++) {
+          const x = Math.random() * 512, y = Math.random() * 512,
+                r = 20 + Math.random() * 80, a = 0.015 + Math.random() * 0.04;
+          const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+          g.addColorStop(0, `rgba(255,255,255,${a})`);
+          g.addColorStop(0.4, `rgba(255,255,255,${a * 0.5})`);
+          g.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+        }
+        for (let i = 0; i < 5; i++) {
+          const x1 = Math.random() * 512, y1 = Math.random() * 512,
+                x2 = x1 + (Math.random() - 0.5) * 200, y2 = y1 + (Math.random() - 0.5) * 200;
+          ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+          ctx.strokeStyle = `rgba(255,255,255,${0.02 + Math.random() * 0.03})`;
+          ctx.lineWidth = 0.5 + Math.random(); ctx.stroke();
+        }
+        setLensTexture(c.toDataURL());
+      } catch (_e) {}
+    };
+    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+    const id = idle(generate, { timeout: 3000 });
+    return () => { if (window.cancelIdleCallback) window.cancelIdleCallback(id); };
   }, []);
 
   /* ── Idle pointer tracking (stamp on any pointer / wheel / touch) ────── */
@@ -116,34 +131,21 @@ export default function Portfolio() {
     return () => events.forEach(e => window.removeEventListener(e, stamp));
   }, []);
 
-  /* ── CDN script loading + scroll restore + reduced-motion detection ──── */
+  /* ── Reduced-motion detection + scroll restore ──────────────────────── */
   useEffect(() => {
     if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
-
     const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(mql.matches);
-
-    let cancelled = false;
-    (async () => {
-      for (let i = 0; i < CDN.length; i++) {
-        try { await loadScript(CDN[i]); } catch (e) { console.error(e); }
-        if (cancelled) return;
-        setProgress(((i + 1) / CDN.length) * 100);
-      }
-      if (!cancelled) {
-        setReady(true);
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
-        }
-      }
-    })();
-    return () => { cancelled = true; };
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
   }, []);
 
   /* ── Three.js scene (lives in src/scene/useThreeScene.js) ───────────── */
   useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneReady,
-                  mouseLastMoveRef, autoScrollRef, pausedRef, lenisStoppedRef, reducedMotion });
+                  mouseLastMoveRef, autoScrollRef, pausedRef, lenisStoppedRef, reducedMotion,
+                  isMobile });
 
   /* ── Audio (ambient music, SFX, planet tones, spatial pan) ─────────── */
   useSoundManager({ ready, soundOn, threeRef, audioRef });
@@ -223,26 +225,33 @@ export default function Portfolio() {
     return () => { obs.disconnect(); eyebrowObs.disconnect(); };
   }, []);
 
-  /* ── Auto-scroll flag ────────────────────────────────────────────────── */
-  useEffect(() => {
-    if (activeId === 'hero' || activeId === 'about') autoScrollRef.current = true;
-    else if (activeId === 'contact') autoScrollRef.current = false;
-  }, [activeId]);
-
   /* ── CSS 3D perspective tilt on sections ─────────────────────────────── */
   useEffect(() => {
-    if (reducedMotion || !ready) return;
+    if (reducedMotion || isMobile || !ready) return;
     const lenis = threeRef.current.lenis;
     if (!lenis || !sectionsWrapRef.current) return;
 
-    const sections = sectionsWrapRef.current.querySelectorAll('section');
+    const sections = Array.from(sectionsWrapRef.current.querySelectorAll('section'));
+    // Set stable properties once — NOT will-change (applied dynamically below)
     sections.forEach((sec, i) => {
-      sec.style.willChange = 'transform';
       sec.style.backfaceVisibility = 'hidden';
       sec.style.zIndex = String(i + 1);
     });
 
+    // Only promote sections within 1.5 viewports of center to their own layer.
+    // Applying will-change to all sections at once creates one GPU layer per section,
+    // which wastes VRAM and compositor memory on off-screen sections.
+    const updateWillChange = () => {
+      sections.forEach((sec) => {
+        const rect = sec.getBoundingClientRect();
+        const nearViewport = rect.bottom > -window.innerHeight * 0.5 &&
+                             rect.top < window.innerHeight * 1.5;
+        sec.style.willChange = nearViewport ? 'transform' : 'auto';
+      });
+    };
+
     const applyDepth = () => {
+      updateWillChange();
       sections.forEach((sec) => {
         const fromCenter = sec.getBoundingClientRect().top / window.innerHeight;
         const rotateX = Math.max(-8, Math.min(8, fromCenter * 8));
@@ -254,7 +263,7 @@ export default function Portfolio() {
     applyDepth();
     return () => {
       lenis.off('scroll', applyDepth);
-      sections.forEach(sec => { sec.style.transform = ''; sec.style.willChange = ''; });
+      sections.forEach(sec => { sec.style.transform = ''; sec.style.willChange = 'auto'; });
     };
   }, [ready, reducedMotion]);
 
@@ -273,10 +282,8 @@ export default function Portfolio() {
       if (key === ' ') {
         ev.preventDefault();
         setPaused(prev => { const next = !prev; pausedRef.current = next; return next; });
-      } else if (ev.key === '?') {
-        setShowKeyboardHelp(prev => !prev);
       } else if (key === 'escape') {
-        setShowKeyboardHelp(false);
+        // escape key reserved
       } else if (key === 'c') {
         const cs = threeRef.current._constellation;
         if (cs) cs.active = !cs.active;
@@ -443,15 +450,11 @@ export default function Portfolio() {
   /* ── Render ──────────────────────────────────────────────────────────── */
   return (
     <>
-      <GlobalStyle />
       <LoadingScreen progress={progress} done={sceneReady} onSkip={() => setSceneReady(true)} />
       <CustomCursor mode={cursorMode} color={cursorColor} />
 
       {/* Fixed WebGL canvas — behind everything */}
       <canvas ref={canvasRef} style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }} />
-
-      {/* DOM container for imperative planet / sun name labels */}
-      <div ref={labelsRef} style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 3, overflow: 'hidden' }} />
 
       {/* Per-planet atmospheric haze tint */}
       <AtmosphericHaze lockedPlanetIdx={lockedPlanetIdx} detailOpen={Boolean(detail)} />
@@ -478,32 +481,53 @@ export default function Portfolio() {
           }}
         >
           <Hero       onHoverBtn={hoverBtn} onUnhover={unhover} scrollTo={scrollToSection} reducedMotion={reducedMotion} />
-          <About />
-          <Projects   onHoverCard={hoverCard} onUnhover={unhover} onHoverBtn={hoverBtn} onOpenProject={openProject} scrollTo={scrollToSection} />
-          <Skills />
-          <Experience onOpenExperience={openExperience} onHoverBtn={hoverBtn} onUnhover={unhover} scrollTo={scrollToSection} />
-          <Terminal   onViewSource={() => setShowSourceViewer(true)} />
-          <Contact    onHoverBtn={hoverBtn} onUnhover={unhover} />
-          <Footer />
+          <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+            <About />
+          </Suspense>
+          <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+            <Projects   onHoverCard={hoverCard} onUnhover={unhover} onHoverBtn={hoverBtn} onOpenProject={openProject} scrollTo={scrollToSection} />
+          </Suspense>
+          <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>
+            <Skills />
+          </Suspense>
+          <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+            <Experience onOpenExperience={openExperience} onHoverBtn={hoverBtn} onUnhover={unhover} scrollTo={scrollToSection} />
+          </Suspense>
+          <Suspense fallback={<div style={{ minHeight: '80vh' }} />}>
+            <Terminal   onViewSource={() => setShowSourceViewer(true)} />
+          </Suspense>
+          <Suspense fallback={<div style={{ minHeight: '80vh' }} />}>
+            <Contact    onHoverBtn={hoverBtn} onUnhover={unhover} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <Footer />
+          </Suspense>
         </div>
       </main>
 
       {/* Detail / warp overlay */}
-      <DetailPage
-        open={Boolean(detail)}
-        kind={detail?.kind}
-        item={detail?.item}
-        planet={detail?.planetIdx != null ? PLANET_LORE[detail.planetIdx] : null}
-        onBack={releaseOrbitLock}
-        onDismiss={dismissDetail}
-        onHoverBtn={hoverBtn}
-        onUnhover={unhover}
-      />
+      <Suspense fallback={null}>
+        <DetailPage
+          open={Boolean(detail)}
+          kind={detail?.kind}
+          item={detail?.item}
+          planet={detail?.planetIdx != null ? PLANET_LORE[detail.planetIdx] : null}
+          onBack={releaseOrbitLock}
+          onDismiss={dismissDetail}
+          onHoverBtn={hoverBtn}
+          onUnhover={unhover}
+        />
+      </Suspense>
 
       {/* Persistent widgets (hidden while detail is open) */}
-      {!detail && <ChatWidget onHoverBtn={hoverBtn} onUnhover={unhover} scrollTo={scrollToSection} />}
-      {!detail && <AstronautHUD activeId={activeId} />}
-      <AudioVisualizer soundOn={soundOn} />
+      {!detail && (
+        <Suspense fallback={null}>
+          <ChatWidget onHoverBtn={hoverBtn} onUnhover={unhover} scrollTo={scrollToSection} />
+        </Suspense>
+      )}
+      <Suspense fallback={null}>
+        <AudioVisualizer soundOn={soundOn} />
+      </Suspense>
 
       {/* Dirty-lens smudge overlay */}
       {lensTexture && (
@@ -524,8 +548,12 @@ export default function Portfolio() {
       />
 
       {/* Modals / overlays */}
-      {showKeyboardHelp && <KeyboardHelp onClose={() => setShowKeyboardHelp(false)} />}
-      {showSourceViewer && <SourceViewer onClose={() => setShowSourceViewer(false)} onHoverBtn={hoverBtn} onUnhover={unhover} />}
+
+      {showSourceViewer && (
+        <Suspense fallback={null}>
+          <SourceViewer onClose={() => setShowSourceViewer(false)} onHoverBtn={hoverBtn} onUnhover={unhover} />
+        </Suspense>
+      )}
       {isOffline && <OfflineBanner />}
     </>
   );

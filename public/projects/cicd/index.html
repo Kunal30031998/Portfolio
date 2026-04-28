@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CI/CD Pipelines | Project Case Study | Kunal Gautam</title>
-    <meta name="description" content="Faster shipping with fewer production surprises." />
+    <title>CI/CD &amp; Release Infrastructure | Project Case Study | Kunal Gautam</title>
+    <meta name="description" content="Deploy time: 45min → 8min. Six months without a release-caused incident." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://portfolio.kunal-gautam-570.workers.dev/projects/cicd/" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="CI/CD Pipelines | Project Case Study | Kunal Gautam" />
-    <meta property="og:description" content="Faster shipping with fewer production surprises." />
+    <meta property="og:title" content="CI/CD &amp; Release Infrastructure | Project Case Study | Kunal Gautam" />
+    <meta property="og:description" content="Deploy time: 45min → 8min. Six months without a release-caused incident." />
     <meta property="og:url" content="https://portfolio.kunal-gautam-570.workers.dev/projects/cicd/" />
     <meta property="og:image" content="https://portfolio.kunal-gautam-570.workers.dev/og-image.svg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="CI/CD Pipelines | Project Case Study | Kunal Gautam" />
-    <meta name="twitter:description" content="Faster shipping with fewer production surprises." />
+    <meta name="twitter:title" content="CI/CD &amp; Release Infrastructure | Project Case Study | Kunal Gautam" />
+    <meta name="twitter:description" content="Deploy time: 45min → 8min. Six months without a release-caused incident." />
     <meta name="twitter:image" content="https://portfolio.kunal-gautam-570.workers.dev/og-image.svg" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"CI/CD Pipelines | Project Case Study | Kunal Gautam","description":"Faster shipping with fewer production surprises.","url":"https://portfolio.kunal-gautam-570.workers.dev/projects/cicd/","author":{"@type":"Person","name":"Kunal Gautam","url":"https://portfolio.kunal-gautam-570.workers.dev","sameAs":["https://github.com/Kunal30031998","https://www.linkedin.com/in/kgotham/"]}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CreativeWork","name":"CI/CD & Release Infrastructure | Project Case Study | Kunal Gautam","description":"Deploy time: 45min → 8min. Six months without a release-caused incident.","url":"https://portfolio.kunal-gautam-570.workers.dev/projects/cicd/","author":{"@type":"Person","name":"Kunal Gautam","url":"https://portfolio.kunal-gautam-570.workers.dev","sameAs":["https://github.com/Kunal30031998","https://www.linkedin.com/in/kgotham/"]}}</script>
     <style>
       :root { color-scheme: dark; }
       html, body {
@@ -56,13 +56,13 @@
   </head>
   <body>
     <main class="wrap">
-      <h1>CI/CD Pipelines</h1>
-      <p class="sub">Faster shipping with fewer production surprises.</p>
+      <h1>CI/CD &amp; Release Infrastructure</h1>
+      <p class="sub">Deploy time: 45min → 8min. Six months without a release-caused incident.</p>
       <div class="chips"><span class="chip">GitHub Actions</span><span class="chip">Jenkins</span><span class="chip">Terraform</span><span class="chip">Docker</span></div>
-      <p>Designed and implemented CI/CD with GitHub Actions, Jenkins, and Terraform. Owned end-to-end release management with production monitoring via CloudWatch, New Relic, and the ELK stack.</p>
-<p>releases were manual and risky</p>
+      <p>Redesigned the entire release pipeline with GitHub Actions + Jenkins + Terraform. Parallelized test suites, added Docker layer caching, and moved to immutable infra. Deploy time: 45min → 8min. Production incidents from releases: 2/month → 0 for 6 consecutive months.</p>
+<p>deploys took 45 minutes, required 3 people, and broke prod twice a month</p>
       <h2>Highlights</h2>
-      <ul><li>Automated build/test/release pipelines with repeatable environments.</li><li>Infra as code with Terraform to reduce drift.</li><li>Observability baseline (logs/metrics/alerts) to shorten incident loops.</li></ul>
+      <ul><li>Parallelized Jest test suites across 4 GitHub Actions workers using jest --shard; test step went from 18min to 4min.</li><li>Docker BuildKit layer caching in CI: node_modules layer only rebuilds on package-lock.json change — image build dropped from 9min to 90sec on cache hits.</li><li>Terraform workspaces for environment parity: dev/staging/prod are identical except for variable overrides — &#39;works on staging, breaks on prod&#39; eliminated.</li><li>Feature flags (LaunchDarkly) decoupled deploy from release: code ships dark, product turns it on — zero-risk rollout for high-risk features.</li><li>CloudWatch + New Relic dashboards with alert routing to PagerDuty; P1 MTTD (mean time to detect) dropped from 40min to under 5min.</li></ul>
       <a class="cta" href="/?project=cicd">Open Interactive Portfolio View</a>
       <p style="margin-top:26px; color:#90a2bd;">See full portfolio: <a href="https://portfolio.kunal-gautam-570.workers.dev/">https://portfolio.kunal-gautam-570.workers.dev</a></p>
     </main>

@@ -13,8 +13,9 @@ export function SoundToggle({ soundOn, onToggle, onHoverBtn, onUnhover, detailOp
       aria-pressed={soundOn}
       style={{
         position: 'fixed',
-        top: detailOpen ? 78 : 20,
+        top: 20,
         right: 22,
+        transform: `translateY(${detailOpen ? 58 : 0}px)`,
         zIndex: 9999,
         width: 42, height: 42,
         borderRadius: '50%',
@@ -26,7 +27,7 @@ export function SoundToggle({ soundOn, onToggle, onHoverBtn, onUnhover, detailOp
         backdropFilter: 'blur(10px)',
         cursor: 'none',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        transition: 'border-color 0.3s, box-shadow 0.3s, top 300ms ease',
+        transition: 'border-color 0.3s, box-shadow 0.3s, transform 300ms ease',
       }}
     >
       {soundOn ? (

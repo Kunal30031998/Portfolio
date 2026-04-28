@@ -296,14 +296,14 @@
     "eyebrow": "05 — Deep Field",
     "title": "Access the terminal.",
     "script": [
-      { "cmd": "$ whoami",          "out": "> kunal gautam — senior frontend engineer · full stack context · 6+ years" },
-      { "cmd": "$ kunal --role",    "out": "> software developer ii @ hashedin by deloitte · frontend lead + full stack delivery" },
-      { "cmd": "$ kunal --best-at", "out": "> react · typescript · performance optimization · component architecture · api design" },
-      { "cmd": "$ kunal --scale",   "out": "> 50,000+ concurrent users · 12+ products delivered · 4 engineers mentored" },
-      { "cmd": "$ kunal --stack",   "out": "> react · typescript · node.js · graphql · aws · gcp · docker · terraform · postgres" },
-      { "cmd": "$ kunal --why",     "out": "> i own the ui layer and understand what's below it. that's the difference between shipping and guessing." },
-      { "cmd": "$ kunal --status",  "out": "> open to senior frontend, tech lead, and full-stack roles. let's talk." },
-      { "cmd": "$ kunal --secret",  "out": "> you found the terminal. hire someone who builds their portfolio with WebGL + Three.js + AI. that's the bar." }
+      { "cmd": "$ whoami",                "out": "kunal gautam  —  senior frontend engineer · full stack context · 6+ years" },
+      { "cmd": "$ pwd",                   "out": "/home/kunal/portfolio" },
+      { "cmd": "$ ls -la",                "out": "drwxr-xr-x  about.md\ndrwxr-xr-x  projects/\ndrwxr-xr-x  skills.json\n-rw-r--r--  resume.pdf\n-rwxr-xr-x  hire.sh*\n-rw-r--r--  README.md" },
+      { "cmd": "$ cat README.md",         "out": "# Kunal Gautam\nSenior Frontend Engineer. React · TypeScript · Node.js\nBuilt for scale. Shipped to production. Open to new roles.\n\nrun ./hire.sh to get in touch." },
+      { "cmd": "$ git log --oneline -5",  "out": "a3f91c2 feat: add WebGL solar system scene\nb7d204e perf: reduce three.js draw calls by 40%\nc1e8a01 feat: AI chat widget with claude integration\n9fa3310 refactor: migrate CSS to compositor-only animations\n2bc771d chore: deploy to cloudflare workers" },
+      { "cmd": "$ npm run build",         "out": "vite v6.4.2 building for production...\n✓ 847 modules transformed\ndist/assets/index.js    142 kB\ndist/assets/three.js    470 kB\n✓ built in 1.28s" },
+      { "cmd": "$ kunal --stack",         "out": "frontend  react · typescript · next.js · redux · vite · gsap\nbackend   node.js · express · graphql · websockets · postgres\ncloud     aws (ec2 · s3 · lambda) · gcp (cloud run · firebase)\ndevops    docker · terraform · github actions · jenkins" },
+      { "cmd": "$ ./hire.sh",             "out": "📡 sending signal to kunal...\n✓ email: kunal.gautam.570@gmail.com\n✓ available for senior frontend / tech lead roles\naccess granted. let's build something." }
     ]
   },
 

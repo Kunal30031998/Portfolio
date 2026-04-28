@@ -14,6 +14,7 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
   const nameRef   = useRef(null);
   const [nameVisible, setNameVisible] = useState(false);
   const statsVisible = useInView(statsRef, { threshold: 0.1 });
+  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
 
   return (
     <section
@@ -30,6 +31,7 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
     >
       {/* ── LEFT: Text content ─────────────────────────────────────── */}
       <div
+        className="hero-content"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -45,9 +47,9 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
           <div
             className="font-mono"
             style={{
-              color: 'var(--accent)',
-              fontSize: 10.5,
-              letterSpacing: '0.48em',
+              color: 'var(--accent-bright)',
+              fontSize: 11,
+              letterSpacing: '0.40em',
               textTransform: 'uppercase',
               display: 'inline-flex',
               alignItems: 'center',
@@ -101,17 +103,17 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
             style={{ fontWeight: 400, letterSpacing: '-0.022em', display: 'inline-block' }}
           >{lastName}</span>
         </h1>
-        {/* Particle morph — assembles name from dust, then reveals h1 */}
-        <ParticleMorphText targetRef={nameRef} onDone={() => setNameVisible(true)} />
+        {/* Particle morph \u2014 assembles name from dust (desktop only) */}
+        {!isMobile && <ParticleMorphText targetRef={nameRef} onDone={() => setNameVisible(true)} />}
 
         {/* Typewriter + Location tag */}
-        <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
+        <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap', minHeight: '2em' }}>
           <div
             className="font-mono"
             style={{
               fontSize: 'clamp(0.95rem, 1.3vw, 1.1rem)',
               letterSpacing: '0.04em',
-              color: 'var(--text-dim)',
+              color: 'var(--text)',
             }}
           >
             <span style={{ color: 'var(--accent)' }}>{'>'} </span>
@@ -142,7 +144,7 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
           style={{
             marginTop: '1.75rem',
             fontSize: 'clamp(0.98rem, 1.2vw, 1.08rem)',
-            color: 'var(--text-dim)',
+            color: 'var(--text)',
             maxWidth: 540,
             textAlign: 'left',
             animationDelay: '0.3s',
@@ -152,8 +154,8 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
         >
           Full stack software engineer. 6+ years.
           <br />
-          <span style={{ color: 'var(--text-faint)', fontSize: '0.94em' }}>
-            React, Node, and cloud infrastructure for apps that scale to 50,000+ concurrent users.
+          <span style={{ color: 'var(--text-dim)', fontSize: '0.94em' }}>
+            Frontend-first. React and TypeScript at the core. Full stack context that makes everything ship cleaner.
           </span>
         </p>
 
@@ -170,7 +172,7 @@ export function Hero({ onHoverBtn, onUnhover, scrollTo }) {
               >
                 <CountUp to={s.value} suffix={s.suffix} trigger={statsVisible} duration={1400} />
               </span>
-              <span className="font-mono" style={{ fontSize: 9.5, letterSpacing: '0.28em', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
+              <span className="font-mono" style={{ fontSize: 9.5, letterSpacing: '0.28em', color: 'var(--text-dim)', textTransform: 'uppercase' }}>
                 {s.label}
               </span>
             </div>

@@ -60,7 +60,7 @@ export function About() {
                   animation: statsIn ? `fadeInUp 0.8s ease-out ${i * 0.08}s forwards` : 'none',
                 }}
               >
-                <div className="font-display" style={{ fontSize: '2.1rem', fontWeight: 500, lineHeight: 1, color: 'var(--text)' }}>
+                <div className="font-display" style={{ fontSize: '2.1rem', fontWeight: 500, lineHeight: 1, color: 'var(--text)', fontVariantNumeric: 'tabular-nums', minHeight: '2.1rem' }}>
                   <CountUp to={st.value} suffix={st.suffix} trigger={statsIn} />
                 </div>
                 <div className="font-mono" style={{ color: 'var(--text-dim)', fontSize: 10, marginTop: 10, letterSpacing: '0.22em', textTransform: 'uppercase' }}>

@@ -165,7 +165,7 @@ export function ChatWidget({ onHoverBtn, onUnhover, scrollTo }) {
     bottom: pos.y === null ? 24 : 'auto',
     left: pos.x !== null ? pos.x : 'auto',
     top: pos.y !== null ? pos.y : 'auto',
-    width: 'min(420px, 92vw)', height: 520,
+    width: 'min(420px, 92vw)', height: 'min(520px, 85vh)',
     zIndex: 9000
   };
 
@@ -174,7 +174,7 @@ export function ChatWidget({ onHoverBtn, onUnhover, scrollTo }) {
       <button
         onMouseEnter={onHoverBtn} onMouseLeave={onUnhover}
         onClick={() => setOpen(true)}
-        className="font-mono skeuo-pill"
+        className="font-mono skeuo-pill chat-launcher-btn"
         style={{
           position:'fixed',right:24,bottom:24,zIndex:9000,
           padding:'14px 22px',backdropFilter:'blur(14px)',
@@ -191,7 +191,7 @@ export function ChatWidget({ onHoverBtn, onUnhover, scrollTo }) {
   }
 
   return (
-    <div ref={panelRef} className="chat-panel skeuo-bezel" style={{
+    <div ref={panelRef} className="chat-panel skeuo-bezel chat-open-panel" style={{
       ...panelStyle, display:'flex', flexDirection:'column',
       backdropFilter:'blur(18px)', overflow:'hidden', fontFamily:'var(--font-mono)',
       // E7: animated gradient border

@@ -1,4 +1,8 @@
 import { useEffect } from 'react';
+import * as THREE from 'three';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from '@studio-freight/lenis';
 import { createNoise3D } from 'simplex-noise';
 import { ORBITAL_WORKER_CODE } from '../lib/three/orbitalWorkerCode';
 
@@ -9,36 +13,38 @@ import { ORBITAL_WORKER_CODE } from '../lib/three/orbitalWorkerCode';
    communicate back to React without coupling Three.js to component state.
    Called once when CDN scripts are ready (ready === true).
    ========================================================================= */
-export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneReady, mouseLastMoveRef, autoScrollRef, pausedRef, lenisStoppedRef, reducedMotion }) {
+export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneReady, mouseLastMoveRef, autoScrollRef, pausedRef, lenisStoppedRef, reducedMotion, isMobile }) {
   useEffect(() => {
     if (!ready) return;
-    if (!ready) return;
-    const THREE = window.THREE;
-    const gsap = window.gsap;
-    const ScrollTrigger = window.ScrollTrigger;
-    const Lenis = window.Lenis;
-    if (!THREE || !gsap || !Lenis) return;
     gsap.registerPlugin(ScrollTrigger);
 
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    // isMobile provided as prop — no redeclaration needed
 
-    /* Lenis smooth scroll */
-    const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
-    lenis.on('scroll', ScrollTrigger.update);
-    const _gsapTickerFn = (time) => lenis.raf(time * 1000);
-    gsap.ticker.add(_gsapTickerFn);
-    gsap.ticker.lagSmoothing(0);
+    /* Lenis smooth scroll — desktop only.
+       On mobile, Lenis fights iOS rubber-band momentum and adds JS overhead.
+       We use native scroll on mobile and hook GSAP ticker directly. */
+    let lenis = null;
+    let _gsapTickerFn = null;
+    if (!isMobile) {
+      lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      _gsapTickerFn = (time) => lenis.raf(time * 1000);
+      gsap.ticker.add(_gsapTickerFn);
+      gsap.ticker.lagSmoothing(0);
+    } else if (isMobile) {
+      // Keep ScrollTrigger updated via native scroll events instead
+      window.addEventListener('scroll', ScrollTrigger.update, { passive: true });
+    }
     threeRef.current.lenis = lenis;
     // Environment mode for scene transitions (main <-> detail)
     threeRef.current.envMode = threeRef.current.envMode || 'main';
     const env = { mix: 0 }; // 0 main space, 1 detail black hole
 
-    /* Force the page to start at the top on load — browsers (and Lenis)
-       will otherwise restore the previous scroll position on reload. */
+    /* Force the page to start at the top on load */
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual';
     }
-    lenis.scrollTo(0, { immediate: true, force: true });
+    if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
     window.scrollTo(0, 0);
 
     /* Scene */
@@ -52,7 +58,7 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
       canvas: canvasRef.current,
       antialias: !isMobile,
       alpha: true,
-      powerPreference: isMobile ? 'low-power' : 'default',
+      powerPreference: isMobile ? 'low-power' : 'high-performance',
     });
     // Cap DPR at 1 on mobile, 1.5 on desktop — 4K monitors don't need full res for a space bg
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.0 : 1.5));
@@ -1337,9 +1343,8 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
     // Sprite removed — no longer attached to Mercury
     /* -------- END E10 -------- */
 
-    // ---- Name labels for sun + each planet (DOM spans, positioned imperatively each tick) ----
+    // ---- Planet labels removed ----
     const planetLabelEls = [];
-    if (labelsRef.current) {
 
     /* E14 — Constellation mode: KUNAL star map stored for toggle */
     const KUNAL_STARS = [
@@ -1394,27 +1399,6 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
     disposables.push({ geo: _constellGeo, mat: _csMat });
     disposables.push({ geo: _csLineGeo, mat: _csLineSegments?.material });
     // End of constellation block
-
-      const _lc = labelsRef.current;
-      const _mkLbl = (text, col, glow) => {
-        const el = document.createElement('span');
-        el.className = 'planet-label';
-        el.textContent = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-        el.style.color = col;
-        el.style.textShadow = `0 0 10px ${glow}`;
-        _lc.appendChild(el);
-        return el;
-      };
-      planetLabelEls.push({ el: _mkLbl('Sol', 'rgba(255,218,90,0.9)', 'rgba(255,165,40,0.7)'), obj: sun });
-      activePlanets.forEach((P, i) => {
-        const _pc = new THREE.Color(P.color);
-        const _pr = Math.round(_pc.r*255), _pg = Math.round(_pc.g*255), _pb = Math.round(_pc.b*255);
-        planetLabelEls.push({
-          el: _mkLbl(P.name, `rgba(${_pr},${_pg},${_pb},0.9)`, `rgba(${_pr},${_pg},${_pb},0.55)`),
-          obj: orbs[i], orbIdx: i,
-        });
-      });
-    }
 
     /* ---------- ASTEROID BELT (hyper-real: C/S/M spectral types) ----------
        Real asteroids split roughly into three spectral classes:
@@ -1998,8 +1982,9 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
       desiredLook.copy(tmpB);
     };
     updateDesiredFromScroll();
-    // Update on scroll via Lenis (already wired) — no ScrollTrigger needed
-    lenis.on('scroll', updateDesiredFromScroll);
+    // Update on scroll — via Lenis on desktop, native scroll event on mobile
+    if (lenis) lenis.on('scroll', updateDesiredFromScroll);
+    else window.addEventListener('scroll', updateDesiredFromScroll, { passive: true });
     window.addEventListener('resize', updateDesiredFromScroll);
 
     // Pre-build flat material list for solar-system fade — avoids traverse each frame
@@ -2030,6 +2015,20 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
     const _reuseDetachWP    = new THREE.Vector3();
     const _reuseOrbLocal    = new THREE.Vector3();
 
+    // Pre-allocate label slot objects — reused each frame to avoid per-frame GC pressure.
+    // _lpos is cleared with .length=0 instead of re-creating the array each tick.
+    const _lpos = [];
+    const _lposSlot = (n) => {
+      while (_lpos.length < n + 1) _lpos.push({ li:0, cx:0, cy:0, labelCy:0, ndcZ:0, screenR:0, opacity:1 });
+    };
+
+    // Hoisted uniform setter — avoids creating a new arrow function on every tick frame.
+    // Used by the gravitational-lens effect blocks in the orbit-lock animation.
+    const _setGLUniform = (uniforms, k, v) => {
+      const u = uniforms.get ? uniforms.get(k) : uniforms[k];
+      if (u) u.value = v;
+    };
+
     /* Animate */
     const clock = new THREE.Clock();
     let raf;
@@ -2040,12 +2039,26 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
     // Frame-rate cap: 30fps on all devices — portfolio animations look smooth at 30fps
     // and this gives the GPU significant headroom, preventing thermal throttling on laptops.
     // High-end gets 60fps cap since it has the headroom.
-    const _frameMinMs = 33; // fixed 30fps cap on all devices
+    const _frameMinMs = isMobile ? 50 : 33; // 20fps mobile, 30fps desktop
     let _lastRafTime = 0;
+    // Mobile: pause rendering during active scroll to free the main thread.
+    // Resume 250ms after scroll stops so the frame is still rendered at rest.
+    let _scrollPauseTimer = null;
+    let _scrollPaused = false;
+    if (isMobile) {
+      const onScrollStart = () => {
+        _scrollPaused = true;
+        clearTimeout(_scrollPauseTimer);
+        _scrollPauseTimer = setTimeout(() => { _scrollPaused = false; }, 250);
+      };
+      window.addEventListener('scroll', onScrollStart, { passive: true });
+    }
     const tick = () => {
       const now = performance.now();
       // Pause completely when tab is in background
       if (document.hidden) { raf = requestAnimationFrame(tick); return; }
+      // Mobile: skip frames during scroll so the main thread stays free
+      if (_scrollPaused) { raf = requestAnimationFrame(tick); return; }
       if (now - _lastRafTime < _frameMinMs) { raf = requestAnimationFrame(tick); return; }
       _lastRafTime = now;
       // getDelta() FIRST so it returns true frame delta; elapsedTime is updated by it
@@ -2288,9 +2301,8 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
             { const _gl = threeRef.current._gravLensEffect; if (_gl?.uniforms) {
               _reuseGLVec.copy(_pWP).project(camera);
               _reuseGLCenter.set(_reuseGLVec.x * 0.5 + 0.5, -_reuseGLVec.y * 0.5 + 0.5);
-              const _setU = (k, v) => { const u = _gl.uniforms.get ? _gl.uniforms.get(k) : _gl.uniforms[k]; if (u) u.value = v; };
-              _setU('uGLCenter', _reuseGLCenter);
-              _setU('uGLStrength', _ep * 0.10);
+              _setGLUniform(_gl.uniforms, 'uGLCenter', _reuseGLCenter);
+              _setGLUniform(_gl.uniforms, 'uGLStrength', _ep * 0.10);
             }}
 
           } else if (!_ol.active && _ol.planetIdx >= 0 && _ol.prog > 0) {
@@ -2304,8 +2316,7 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
             _outerRingMat.opacity = _ep * 0.3;
             // E8 — fade lens out as planet returns
             { const _gl = threeRef.current._gravLensEffect; if (_gl?.uniforms) {
-              const _setU = (k, v) => { const u = _gl.uniforms.get ? _gl.uniforms.get(k) : _gl.uniforms[k]; if (u) u.value = v; };
-              _setU('uGLStrength', _ep * 0.10);
+              _setGLUniform(_gl.uniforms, 'uGLStrength', _ep * 0.10);
             }}
 
             if (_releaseOrb) {
@@ -2359,8 +2370,7 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
             _outerRingMat.opacity = 0;
             // E8 — ensure lens is fully off when idle
             { const _gl = threeRef.current._gravLensEffect; if (_gl?.uniforms) {
-              const _setU = (k, v) => { const u = _gl.uniforms.get ? _gl.uniforms.get(k) : _gl.uniforms[k]; if (u) u.value = v; };
-              _setU('uGLStrength', 0.0);
+              _setGLUniform(_gl.uniforms, 'uGLStrength', 0.0);
             }}
           }
         }
@@ -2547,22 +2557,7 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
       // E13 — Pause gate
       if (pausedRef.current) { raf = requestAnimationFrame(tick); return; }
 
-      // Auto-scroll — only runs when screen has been idle for 1.5 s.
-      // mouseLastMoveRef is null until first user interaction → treat as active (no scroll).
-      // After first interaction it holds the timestamp; auto-scroll starts once 1.5 s elapses.
-      const _lastMove = mouseLastMoveRef.current;
-      const _userActive = _lastMove === null || (performance.now() - _lastMove) < 1500;
-      if (autoScrollRef.current && !lenisStoppedRef.current && !_userActive) {
-        if (!threeRef.current._autoScrollAcc) threeRef.current._autoScrollAcc = 0;
-        threeRef.current._autoScrollAcc += 0.5;
-        if (threeRef.current._autoScrollAcc >= 1) {
-          const _px = Math.floor(threeRef.current._autoScrollAcc);
-          threeRef.current._autoScrollAcc -= _px;
-          window.scrollBy(0, _px);
-        }
-      } else {
-        threeRef.current._autoScrollAcc = 0;
-      }
+      // Auto-scroll disabled
 
       // E14 — constellation mode transition
       const _cs = threeRef.current._constellation;
@@ -2609,7 +2604,8 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
       if (planetLabelEls.length && (!isMobile || frameCount % 6 === 0)) {
         const _lw = window.innerWidth, _lh = window.innerHeight;
         // Pass 1 — project each object to screen; capture cx, cy, screenR and ndcZ (depth)
-        const _lpos = [];
+        // _lpos is pre-allocated outside tick to avoid per-frame GC pressure.
+        _lpos.length = 0;
         for (let _li = 0; _li < planetLabelEls.length; _li++) {
           const lbl = planetLabelEls[_li];
           const obj = lbl.obj;
@@ -2635,8 +2631,12 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
           } else if (obj === sun) {
             _la = effectiveSunFade;
           }
-          _lpos.push({ li: _li, cx, cy: cy + screenR + 5, labelCy: cy, ndcZ, screenR,
-                       opacity: Math.max(0, Math.min(1, _la)) });
+          // Reuse pre-allocated slot instead of creating a new object literal
+          _lposSlot(_li);
+          const _slot = _lpos[_li] || (_lpos[_li] = {});
+          _slot.li = _li; _slot.cx = cx; _slot.cy = cy + screenR + 5;
+          _slot.labelCy = cy; _slot.ndcZ = ndcZ; _slot.screenR = screenR;
+          _slot.opacity = Math.max(0, Math.min(1, _la));
         }
 
         // Pass 2 — occlusion: if a closer object's screen disc covers this label's
@@ -2684,8 +2684,7 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
           const lp = _lpos[_li];
           if (!lp) continue;
           const lbl = planetLabelEls[lp.li];
-          lbl.el.style.left = lp.cx + 'px';
-          lbl.el.style.top  = lp.cy + 'px';
+          lbl.el.style.transform = 'translate(calc(' + lp.cx + 'px - 50%),' + lp.cy + 'px)';
           const _isLocked = lbl.orbIdx === _lockedPlanetIdx;
           lbl.el.style.opacity = (_hideLabels && !_isLocked) ? '0' : String(lp.opacity);
           // Emphasise the locked planet label
@@ -2736,9 +2735,11 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('resize', updateDesiredFromScroll);
+      window.removeEventListener('scroll', updateDesiredFromScroll);
       window.removeEventListener('mousemove', onMouseNDC);
       window.removeEventListener('deviceorientation', onDeviceOrientationNDC);
       window.removeEventListener('touchstart', _attachNDCOrientation);
+      if (isMobile) window.removeEventListener('scroll', onScrollStart);
 
       // wheel/touch/pointermove idle listeners are owned by the dedicated top-level useEffect
       // E5: terminate orbital worker
@@ -2755,7 +2756,8 @@ export function useThreeScene({ ready, canvasRef, threeRef, labelsRef, setSceneR
       }
       ScrollTrigger.getAll().forEach(t => t.kill());
       try { gsap.ticker.remove(_gsapTickerFn); } catch (_) {}
-      lenis.destroy();
+      if (lenis) lenis.destroy();
+      clearTimeout(_scrollPauseTimer);
       shootingStars.forEach(s => { scene.remove(s.line); s.geo.dispose(); s.mat.dispose(); });
       disposables.forEach(({geo, mat, tex}) => { geo?.dispose?.(); mat?.dispose?.(); tex?.dispose?.(); });
       walls.forEach(w => { w.geometry.dispose(); });

@@ -18,5 +18,5 @@ export function CountUp({ to, suffix = '', duration = 1600, trigger }) {
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
   }, [trigger, to, duration]);
-  return <span>{typeof to === 'number' ? val : to}{suffix}</span>;
+  return <span style={{ fontVariantNumeric: 'tabular-nums', display: 'inline-block', minWidth: '1ch' }}>{typeof to === 'number' ? val : to}{suffix}</span>;
 }
